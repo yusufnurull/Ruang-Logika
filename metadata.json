@@ -1,0 +1,6 @@
+{
+  "name": "Ruang Logika",
+  "description": "Platform Pembelajaran Interaktif Struktur Data & Algoritma SMA - Pengembang: Yusuf Nurul Huda",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

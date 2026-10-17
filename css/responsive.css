@@ -1,0 +1,53 @@
+/* ==========================================================================
+   RUANG LOGIKA — RESPONSIVE STYLESHEET (CSS3)
+   Optimasi untuk Mobile, Tablet, dan Desktop Monitor SMA
+   Pengembang: Yusuf Nurul Huda
+   ========================================================================== */
+
+/* Tablet & Mobile Breakpoints */
+@media (max-width: 1024px) {
+  .nav-container {
+    width: 92vw;
+  }
+  
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lab-split-screen {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-container {
+    width: 90vw;
+  }
+
+  .auth-card-container {
+    flex-direction: column !important;
+  }
+
+  .auth-left-showcase {
+    display: none !important;
+  }
+
+  .auth-right-form {
+    width: 100% !important;
+    padding: 1.5rem !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header {
+    height: 3.5rem;
+  }
+  
+  main {
+    padding-top: 3.75rem !important;
+  }
+}

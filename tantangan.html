@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Tantangan Logika — Ruang Logika | Studi Kasus &amp; Misi Algoritma</title>
+  <meta name="description" content="Tantangan Logika Interaktif Struktur Data Linear (Stack &amp; Queue) - Simulasi Pembalik Kata, Detektor Kurung, dan Antrean Loket. Pengembang: Yusuf Nurul Huda."/>
+  <meta property="og:title" content="Tantangan Logika — Ruang Logika | Studi Kasus &amp; Misi Algoritma"/>
+  <meta property="og:description" content="Tantangan Logika Interaktif Struktur Data Linear SMA. Pengembang: Yusuf Nurul Huda."/>
+  <meta property="og:type" content="website"/>
+
+  <!-- Google Typography & Material Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/responsive.css"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-high": "#e6e8eb",
+            "primary-container": "#17324d",
+            "on-primary-container": "#819aba",
+            "surface-bright": "#f7f9fc",
+            "on-secondary": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "outline": "#74777e",
+            "on-surface-variant": "#43474d",
+            "primary": "#001d36",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6",
+            "on-error": "#ffffff",
+            "on-background": "#191c1e",
+            "tertiary-fixed": "#ffdea7",
+            "tertiary-fixed-dim": "#f8bd45",
+            "on-tertiary-fixed": "#271900",
+            "on-secondary-fixed": "#00201d",
+            "on-surface": "#191c1e",
+            "inverse-surface": "#2d3133",
+            "tertiary": "#271900",
+            "on-primary-fixed": "#001d36",
+            "surface-container-lowest": "#ffffff",
+            "secondary-container": "#82f6e7",
+            "tertiary-container": "#422d00",
+            "surface-tint": "#47607e",
+            "primary-fixed-dim": "#afc9ea",
+            "surface": "#f7f9fc",
+            "on-secondary-container": "#007167",
+            "surface-container-low": "#f2f4f7",
+            "surface-variant": "#e0e3e6",
+            "secondary": "#006a61",
+            "surface-container-highest": "#e0e3e6",
+            "on-primary": "#ffffff",
+            "surface-container": "#eceef1",
+            "background": "#f7f9fc"
+          },
+          fontFamily: {
+            "headline-xl": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "display-lg": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-lg": ["JetBrains Mono"],
+            "label-md": ["JetBrains Mono"],
+            "code-block": ["JetBrains Mono"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-body-md text-on-surface antialiased">
+  
+  <!-- Fixed Top Header (Google Stitch Navbar) -->
+  <header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl border-b border-outline-variant/40">
+    <div class="h-16 w-[95vw] mx-auto px-2 sm:px-4 flex items-center justify-between gap-3 sm:gap-4">
+      <div class="flex items-center gap-3">
+        <a class="flex items-center gap-2.5" href="index.html">
+          <div class="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center text-on-secondary shadow-sm">
+            <span class="material-symbols-outlined text-xl">account_tree</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-headline-md text-lg font-bold tracking-tight text-primary leading-none">Ruang Logika</span>
+            <span class="font-label-md text-[11px] text-on-surface-variant leading-none mt-1">Kelas X SMA</span>
+          </div>
+        </a>
+      </div>
+
+      <nav class="hidden xl:flex items-center gap-1">
+        <a class="px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="index.html">Beranda</a>
+        <a class="px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="peta-belajar.html">Peta Belajar</a>
+        <a class="px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="materi.html">Materi</a>
+        <a class="px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="laboratorium.html">Lab Interaktif</a>
+        <a aria-current="page" class="px-3 py-2 transition-colors bg-primary-container text-on-primary-container font-headline-md text-body-sm rounded-lg shadow-sm" href="tantangan.html">Tantangan Kasus</a>
+        <a class="px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="kuis.html">Kuis &amp; Evaluasi</a>
+      </nav>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <div class="relative">
+          <select id="modeSelector" class="font-body-sm text-xs bg-surface-container-lowest text-on-surface border border-outline-variant rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-secondary cursor-pointer shadow-sm">
+            <option value="siswa" selected>Mode Siswa</option>
+            <option value="guru">Mode Guru</option>
+            <option value="admin">Mode Admin</option>
+            <option value="auth">Login / Register</option>
+          </select>
+        </div>
+
+        <div class="hidden sm:flex items-center gap-1.5 bg-surface-container px-2.5 py-1 rounded-full border border-outline-variant/60">
+          <span class="material-symbols-outlined text-secondary text-base">verified</span>
+          <span class="font-label-md text-xs text-on-surface font-semibold user-display-xp">Level 4 • 850 XP</span>
+        </div>
+
+        <div id="header-auth-container" class="flex items-center">
+          <a href="login.html" class="flex items-center gap-1.5 px-3 py-1.5 bg-secondary text-on-secondary rounded-lg font-headline-md text-xs font-bold hover:bg-secondary/90 shadow-sm transition">
+            <span class="material-symbols-outlined text-sm">login</span>
+            <span>Masuk / Daftar</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Fluid Workspace (95vw) -->
+  <main class="w-full pt-16 bg-surface min-h-[calc(100vh-16rem)]">
+    <div class="flex flex-col w-full">
+      <div class="w-[95vw] mx-auto py-4 flex flex-col gap-4">
+        
+        <!-- Header Banner Card (Stitch Style) -->
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-surface-container-lowest p-4 sm:p-5 rounded-xl shadow-sm border border-outline-variant/20">
+          <div class="flex flex-col">
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-tertiary-fixed-dim text-on-tertiary-fixed">
+                <span class="material-symbols-outlined text-base">emoji_events</span>
+              </span>
+              <span class="font-label-md text-xs uppercase tracking-wider text-secondary font-bold">Studi Kasus &amp; Arena Praktikum</span>
+            </div>
+            <h1 class="font-headline-xl text-xl sm:text-2xl text-primary tracking-tight mt-1 font-bold">
+              Tantangan Pemecahan Masalah Algoritma
+            </h1>
+            <p class="font-body-sm text-xs sm:text-sm text-on-surface-variant">
+              Terapkan karakteristik mekanis Stack (LIFO) dan Queue (FIFO) untuk menyelesaikan teka-teki logika komputasi nyata.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <div class="bg-surface-container-low px-3 py-2 rounded-xl border border-outline-variant/40 text-center">
+              <span class="font-label-md text-[10px] text-on-surface-variant uppercase block">Total Misi</span>
+              <span class="font-code-block text-sm font-bold text-primary">3 Kasus Aktif</span>
+            </div>
+            <div class="bg-surface-container-low px-3 py-2 rounded-xl border border-outline-variant/40 text-center">
+              <span class="font-label-md text-[10px] text-on-surface-variant uppercase block">Hadiah XP</span>
+              <span class="font-code-block text-sm font-bold text-secondary">+150 XP</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 INTERACTIVE CHALLENGE CARDS -->
+        <div class="flex flex-col gap-4">
+
+          <!-- MISI 1: PEMBALIK KATA DENGAN STACK (LIFO) -->
+          <div class="bg-surface-container-lowest rounded-xl p-5 sm:p-6 shadow-sm border border-outline-variant/30 grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+            
+            <div class="lg:col-span-5 flex flex-col gap-3">
+              <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-lg bg-secondary text-on-secondary font-code-block font-bold text-xs flex items-center justify-center">01</span>
+                <span class="font-label-md text-xs font-bold text-secondary uppercase tracking-wider">Misi Stack &bull; Pembalik Kata</span>
+                <span class="ml-auto font-label-md text-xs font-bold text-tertiary-fixed-dim bg-surface-container px-2 py-0.5 rounded-full border border-outline-variant/40">+50 XP</span>
+              </div>
+
+              <h2 class="font-headline-lg text-base sm:text-lg font-bold text-primary">
+                Mesin Pembalik String Otomatis
+              </h2>
+              <p class="font-body-sm text-xs text-on-surface leading-relaxed">
+                Prinsip <em>Last In, First Out</em> (LIFO) pada Stack menjadikannya struktur data tercepat untuk membalik urutan data. Masukkan sebuah kata, masukkan huruf-hurufnya satu per satu ke dalam tumpukan, lalu keluarkan semua untuk melihat hasil kata terbaliknya secara instan!
+              </p>
+
+              <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/30 text-xs flex flex-col gap-1">
+                <span class="font-label-md text-[11px] font-bold text-primary flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs text-secondary">info</span>
+                  Langkah Operasi:
+                </span>
+                <span class="font-body-sm text-[11px] text-on-surface-variant">1. Ketik kata pada input (maksimal 8 huruf).</span>
+                <span class="font-body-sm text-[11px] text-on-surface-variant">2. Klik <strong>Push Huruf</strong> &rarr; Karakter masuk ke Stack.</span>
+                <span class="font-body-sm text-[11px] text-on-surface-variant">3. Klik <strong>Pop Semua</strong> &rarr; Huruf keluar terbalik sempurna.</span>
+              </div>
+            </div>
+
+            <!-- Mini Simulator 1 -->
+            <div class="lg:col-span-7 bg-primary-container text-on-primary-container rounded-xl p-4 sm:p-5 border border-outline-variant/40 flex flex-col gap-3 shadow-sm">
+              <div class="flex items-center justify-between pb-2 border-b border-white/10">
+                <span class="font-label-md text-xs text-tertiary-fixed-dim font-bold">Simulator String Reversal</span>
+                <span class="font-label-md text-[10px] text-on-primary-container">Stack Engine</span>
+              </div>
+
+              <div class="flex flex-col sm:flex-row gap-2">
+                <input id="input-reverse-text" type="text" maxlength="8" value="KOMPUTER" placeholder="Ketik kata..." class="flex-1 bg-surface-container-lowest text-primary font-code-block uppercase tracking-wider text-xs px-3 py-2 rounded-lg border border-outline-variant focus:outline-none focus:ring-2 focus:ring-secondary">
+                <button id="btn-push-reverse" type="button" class="px-3.5 py-2 rounded-lg bg-secondary text-on-secondary font-headline-md text-xs font-semibold hover:bg-secondary/90 transition flex items-center justify-center gap-1 shadow-xs">
+                  <span class="material-symbols-outlined text-sm">arrow_downward</span>
+                  <span>Push Huruf</span>
+                </button>
+                <button id="btn-pop-reverse" type="button" class="px-3.5 py-2 rounded-lg bg-tertiary-fixed-dim text-on-tertiary-fixed font-headline-md text-xs font-bold hover:brightness-105 transition flex items-center justify-center gap-1 shadow-xs">
+                  <span class="material-symbols-outlined text-sm">arrow_upward</span>
+                  <span>Pop Hasil</span>
+                </button>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3 py-1">
+                <div class="p-3 rounded-lg bg-surface-container-low/10 border border-white/10 flex flex-col items-center">
+                  <span class="font-label-md text-[10px] text-on-primary-container mb-1.5">Tumpukan Memori [Stack]</span>
+                  <div id="visual-stack-box" class="w-full min-h-[110px] border border-dashed border-secondary rounded p-1.5 flex flex-col-reverse justify-start gap-1">
+                    <span class="text-[10px] font-code-block text-slate-400 text-center m-auto">Tumpukan Kosong</span>
+                  </div>
+                </div>
+
+                <div class="p-3 rounded-lg bg-surface-container-low/10 border border-white/10 flex flex-col items-center justify-center text-center">
+                  <span class="font-label-md text-[10px] text-on-primary-container">Hasil Pembalikan LIFO</span>
+                  <div id="output-reverse-result" class="font-code-block text-xl sm:text-2xl font-black text-tertiary-fixed-dim tracking-widest my-1 min-h-[32px] flex items-center">
+                    ---
+                  </div>
+                  <span id="output-reverse-status" class="font-label-md text-[10px] text-on-primary-container">Klik 'Pop Hasil' untuk mengeluarkan</span>
+                </div>
+              </div>
+
+              <div id="reverse-log" class="font-code-block text-[11px] text-on-primary-container bg-surface-container-lowest/10 p-2 rounded truncate">
+                Status: Siap menerima kata input (maksimal 8 karakter).
+              </div>
+            </div>
+
+          </div>
+
+          <!-- MISI 2: BALANCED BRACKETS (VALIDATOR SINTAKS DENGAN STACK) -->
+          <div class="bg-surface-container-lowest rounded-xl p-5 sm:p-6 shadow-sm border border-outline-variant/30 grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+            
+            <div class="lg:col-span-5 flex flex-col gap-3">
+              <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-lg bg-tertiary-fixed-dim text-on-tertiary-fixed font-code-block font-bold text-xs flex items-center justify-center">02</span>
+                <span class="font-label-md text-xs font-bold text-tertiary-fixed-dim uppercase tracking-wider">Misi Validasi &bull; Syntax Checker</span>
+                <span class="ml-auto font-label-md text-xs font-bold text-tertiary-fixed-dim bg-surface-container px-2 py-0.5 rounded-full border border-outline-variant/40">+50 XP</span>
+              </div>
+
+              <h2 class="font-headline-lg text-base sm:text-lg font-bold text-primary">
+                Detektor Kurung Siku Seimbang (Balanced Brackets)
+              </h2>
+              <p class="font-body-sm text-xs text-on-surface leading-relaxed">
+                Compiler bahasa pemrograman (seperti Python, C++, dan JavaScript) menggunakan Stack untuk memverifikasi apakah setiap tanda kurung buka <code>(</code>, <code>[</code>, <code>{</code> berpasangan dengan kurung tutup yang tepat.
+              </p>
+
+              <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/30 text-xs flex flex-col gap-1">
+                <span class="font-label-md text-[11px] font-bold text-primary">Aturan Kerja Parser:</span>
+                <span class="font-body-sm text-[11px] text-on-surface-variant">&bull; Kurung buka di-<strong>Push</strong> ke Stack.</span>
+                <span class="font-body-sm text-[11px] text-on-surface-variant">&bull; Kurung tutup men-<strong>Pop</strong> puncak stack dan membandingkan kecocokan.</span>
+                <span class="font-body-sm text-[11px] text-on-surface-variant">&bull; Jika di akhir Stack kosong &amp; tidak ada salah pasangan = <strong>SINTAKS VALID!</strong></span>
+              </div>
+            </div>
+
+            <!-- Mini Simulator 2 -->
+            <div class="lg:col-span-7 bg-primary-container text-on-primary-container rounded-xl p-4 sm:p-5 border border-outline-variant/40 flex flex-col gap-3 shadow-sm">
+              <div class="flex items-center justify-between pb-2 border-b border-white/10">
+                <span class="font-label-md text-xs text-secondary font-bold">Simulator Bracket Parser</span>
+                <span class="font-label-md text-[10px] text-on-primary-container">Stack Parser</span>
+              </div>
+
+              <div class="flex flex-col gap-1.5">
+                <label class="font-label-md text-[11px] text-on-primary-container font-semibold">Rumus / Ekspresi Kurung:</label>
+                <div class="flex gap-2">
+                  <input id="input-brackets" type="text" value="{ [ a + b ] * ( c + d ) }" class="flex-1 bg-surface-container-lowest text-primary font-code-block text-xs px-3 py-2 rounded-lg border border-outline-variant focus:outline-none focus:ring-2 focus:ring-secondary">
+                  <button id="btn-check-brackets" type="button" class="px-4 py-2 rounded-lg bg-secondary text-on-secondary font-headline-md text-xs font-semibold hover:bg-secondary/90 transition flex items-center gap-1 shadow-xs">
+                    <span class="material-symbols-outlined text-sm">rule</span>
+                    <span>Uji Sintaks</span>
+                  </button>
+                </div>
+                <!-- Presets -->
+                <div class="flex flex-wrap items-center gap-1.5 pt-1">
+                  <span class="font-label-md text-[10px] text-on-primary-container">Contoh Cepat:</span>
+                  <button type="button" onclick="document.getElementById('input-brackets').value='( [ { } ] )'" class="font-code-block text-[10px] bg-surface-container-lowest/15 hover:bg-surface-container-lowest/25 px-2 py-0.5 rounded text-secondary">( [ { } ] )</button>
+                  <button type="button" onclick="document.getElementById('input-brackets').value='( [ ) ]'" class="font-code-block text-[10px] bg-surface-container-lowest/15 hover:bg-surface-container-lowest/25 px-2 py-0.5 rounded text-error">( [ ) ] (Error)</button>
+                  <button type="button" onclick="document.getElementById('input-brackets').value='{ ( a + b ) * c }'" class="font-code-block text-[10px] bg-surface-container-lowest/15 hover:bg-surface-container-lowest/25 px-2 py-0.5 rounded text-secondary">{ ( a + b ) * c }</button>
+                </div>
+              </div>
+
+              <div id="bracket-result-card" class="p-3 rounded-lg bg-surface-container-low/10 border border-white/10 flex items-center justify-between gap-3">
+                <div class="flex flex-col">
+                  <span class="font-label-md text-[10px] text-on-primary-container uppercase">Hasil Validasi</span>
+                  <div id="bracket-result-text" class="font-code-block text-xs sm:text-sm font-bold text-secondary mt-0.5 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-base">check_circle</span> Sintaks Valid (Seimbang)
+                  </div>
+                </div>
+                <div id="bracket-stack-preview" class="font-code-block text-[11px] text-on-primary-container text-right">
+                  Stack Sisa: [ ] (Kosong)
+                </div>
+              </div>
+
+              <div id="bracket-log" class="font-code-block text-[11px] text-on-primary-container bg-surface-container-lowest/10 p-2.5 rounded max-h-24 overflow-y-auto flex flex-col gap-1">
+                <div>Log Parser: Siap membedah ekspresi tanda kurung.</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- MISI 3: SIMULASI ANTREAN LOKET KAFETARIA (FIFO QUEUE) -->
+          <div class="bg-surface-container-lowest rounded-xl p-5 sm:p-6 shadow-sm border border-outline-variant/30 grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+            
+            <div class="lg:col-span-5 flex flex-col gap-3">
+              <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-lg bg-secondary text-on-secondary font-code-block font-bold text-xs flex items-center justify-center">03</span>
+                <span class="font-label-md text-xs font-bold text-secondary uppercase tracking-wider">Misi Queue &bull; FIFO Kafetaria</span>
+                <span class="ml-auto font-label-md text-xs font-bold text-tertiary-fixed-dim bg-surface-container px-2 py-0.5 rounded-full border border-outline-variant/40">+50 XP</span>
+              </div>
+
+              <h2 class="font-headline-lg text-base sm:text-lg font-bold text-primary">
+                Simulator Antrean Loket Pemesanan (FIFO)
+              </h2>
+              <p class="font-body-sm text-xs text-on-surface leading-relaxed">
+                Kafetaria sekolah melayani siswa menggunakan sistem nomor tiket terurut. Buktikan bahwa urutan siswa yang mengambil pesanan (Dequeue) selalu sama persis dengan urutan saat mereka mengantre pertama kali (Enqueue).
+              </p>
+
+              <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/30 text-xs flex flex-col gap-1">
+                <span class="font-label-md text-[11px] font-bold text-primary">Prinsip Keadilan Pelayanan:</span>
+                <span class="font-body-sm text-[11px] text-on-surface-variant">&bull; Siswa di ujung <strong>FRONT</strong> dilayani lebih dulu.</span>
+                <span class="font-body-sm text-[11px] text-on-surface-variant">&bull; Siswa baru tiba mengantre di posisi <strong>REAR</strong>.</span>
+              </div>
+            </div>
+
+            <!-- Mini Simulator 3 -->
+            <div class="lg:col-span-7 bg-primary-container text-on-primary-container rounded-xl p-4 sm:p-5 border border-outline-variant/40 flex flex-col gap-3 shadow-sm">
+              <div class="flex items-center justify-between pb-2 border-b border-white/10">
+                <span class="font-label-md text-xs text-tertiary-fixed-dim font-bold">Loket Tiket Kafetaria</span>
+                <span class="font-label-md text-[10px] text-on-primary-container">Queue Tube</span>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                <button id="btn-enqueue-student" type="button" class="flex-1 px-3 py-2 rounded-lg bg-secondary text-on-secondary font-headline-md text-xs font-semibold hover:bg-secondary/90 transition flex items-center justify-center gap-1 shadow-xs">
+                  <span class="material-symbols-outlined text-sm">person_add</span>
+                  <span>Enqueue Siswa [REAR]</span>
+                </button>
+                <button id="btn-dequeue-student" type="button" class="flex-1 px-3 py-2 rounded-lg bg-tertiary-fixed-dim text-on-tertiary-fixed font-headline-md text-xs font-bold hover:brightness-105 transition flex items-center justify-center gap-1 shadow-xs">
+                  <span class="material-symbols-outlined text-sm">restaurant</span>
+                  <span>Layani [FRONT]</span>
+                </button>
+                <button id="btn-reset-queue-sim" type="button" title="Reset Antrean" class="px-2.5 py-2 rounded-lg bg-surface-container-lowest/15 hover:bg-surface-container-lowest/25 text-on-primary-container transition">
+                  <span class="material-symbols-outlined text-sm">refresh</span>
+                </button>
+              </div>
+
+              <!-- Tube Representation -->
+              <div class="p-3 rounded-lg bg-surface-container-low/10 border border-white/10 flex flex-col gap-2">
+                <div class="flex items-center justify-between font-label-md text-[10px]">
+                  <span class="text-tertiary-fixed-dim font-bold">[FRONT: Loket Kasir]</span>
+                  <span class="text-secondary font-bold">[REAR: Pintu Datang]</span>
+                </div>
+
+                <div id="queue-student-tube" class="min-h-[50px] border-y-2 border-dashed border-tertiary-fixed-dim/60 py-2 px-2 flex items-center gap-2 overflow-x-auto">
+                  <!-- Populated via script -->
+                </div>
+              </div>
+
+              <div class="p-2.5 rounded-lg bg-surface-container-lowest/10 border border-white/5 flex items-center justify-between font-label-md text-xs">
+                <span class="text-on-primary-container text-[11px]">Pelanggan Terakhir Selesai:</span>
+                <span id="queue-served-name" class="font-bold text-tertiary-fixed-dim">Belum ada</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Google Stitch Footer -->
+  <footer class="w-full bg-surface-container-lowest border-t border-outline-variant/40 mt-8 py-8 transition-colors">
+    <div class="w-[95vw] mx-auto px-2 sm:px-4 flex flex-col gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        
+        <div class="flex flex-col gap-2 md:col-span-1">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-secondary flex items-center justify-center text-on-secondary shadow-xs">
+              <span class="material-symbols-outlined text-base">account_tree</span>
+            </div>
+            <span class="font-headline-md text-base font-bold text-primary">Ruang Logika</span>
+          </div>
+          <p class="font-body-sm text-xs text-on-surface-variant max-w-sm leading-relaxed">
+            Platform Pembelajaran Interaktif Struktur Data &amp; Algoritma untuk Generasi Digital SMA.
+          </p>
+          <div class="flex items-center gap-2 mt-1">
+            <span class="font-label-md text-[11px] px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-semibold">
+              Edisi Siswa SMA Kelas X
+            </span>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <span class="font-headline-md text-sm font-semibold text-on-surface mb-1">Navigasi Cepat</span>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="index.html">Beranda</a>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="peta-belajar.html">Peta Belajar</a>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="materi.html">Materi Pembelajaran</a>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="laboratorium.html">Laboratorium Virtual</a>
+          <a class="font-body-sm text-xs text-secondary font-bold" href="tantangan.html">Studi Kasus</a>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="kuis.html">Uji Kompetensi</a>
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <span class="font-headline-md text-sm font-semibold text-on-surface mb-1">Fasilitas &amp; Peran</span>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="dashboard-siswa.html">Dashboard Siswa</a>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="dashboard-guru.html">Pemantauan Guru</a>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="dashboard-admin.html">Tata Kelola Admin</a>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="login.html">Portal Akses Akun</a>
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <span class="font-headline-md text-sm font-semibold text-on-surface mb-1">Pengembang &amp; Hak Cipta</span>
+          <div class="p-3 rounded-lg bg-surface-container border border-outline-variant/60 flex flex-col gap-1">
+            <span class="font-label-md text-[11px] text-on-surface-variant">Penanggung Jawab Sistem:</span>
+            <span class="font-headline-md text-xs font-bold text-primary">Pengembang: Yusuf Nurul Huda</span>
+            <span class="font-body-sm text-[11px] text-on-surface-variant mt-0.5">Spesialisasi Kurikulum Informatika SMA &amp; Media Interaktif Algoritma.</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="border-t border-outline-variant/40 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <p class="font-body-sm text-xs text-on-surface-variant text-center sm:text-left">
+          &copy; 2025 Ruang Logika. Hak Cipta Dilindungi Undang-Undang. Pengembang: Yusuf Nurul Huda
+        </p>
+        <div class="flex items-center gap-4">
+          <span class="font-label-md text-xs text-on-surface-variant font-medium">SMA Kelas X &bull; Informatika</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Module Scripts -->
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/main.js"></script>
+
+  <!-- Interactive Logic for Challenges (Vanilla JS) -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // ----------------------------------------------------
+      // MISI 1: PEMBALIK KATA (STACK)
+      // ----------------------------------------------------
+      let charStack = [];
+      const inputWord = document.getElementById("input-reverse-text");
+      const btnPushReverse = document.getElementById("btn-push-reverse");
+      const btnPopReverse = document.getElementById("btn-pop-reverse");
+      const visualStack = document.getElementById("visual-stack-box");
+      const outputResult = document.getElementById("output-reverse-result");
+      const reverseLog = document.getElementById("reverse-log");
+
+      function renderMiniStack() {
+        if (!visualStack) return;
+        visualStack.innerHTML = "";
+        if (charStack.length === 0) {
+          visualStack.innerHTML = `<span class="text-[10px] font-code-block text-slate-400 text-center m-auto">Tumpukan Kosong</span>`;
+          return;
+        }
+        charStack.forEach((char, idx) => {
+          const item = document.createElement("div");
+          const isTop = idx === charStack.length - 1;
+          item.className = `p-1 rounded text-center font-code-block font-bold text-xs shadow-xs ${
+            isTop ? "bg-secondary text-on-secondary ring-1 ring-white" : "bg-primary text-on-primary border border-outline-variant/40"
+          }`;
+          item.textContent = `${char} ${isTop ? "[TOP]" : ""}`;
+          visualStack.appendChild(item);
+        });
+      }
+
+      if (btnPushReverse) {
+        btnPushReverse.addEventListener("click", () => {
+          const raw = (inputWord.value || "").trim().toUpperCase();
+          if (!raw) return;
+          charStack = raw.split("");
+          renderMiniStack();
+          if (outputResult) outputResult.textContent = "---";
+          if (reverseLog) reverseLog.textContent = `PUSH Selesai: ${charStack.length} karakter masuk ke stack memori.`;
+        });
+      }
+
+      if (btnPopReverse) {
+        btnPopReverse.addEventListener("click", () => {
+          if (charStack.length === 0) {
+            if (reverseLog) reverseLog.textContent = "Stack kosong! Masukkan kata dan klik Push terlebih dahulu.";
+            return;
+          }
+          const reversed = [];
+          while (charStack.length > 0) {
+            reversed.push(charStack.pop());
+          }
+          renderMiniStack();
+          if (outputResult) outputResult.textContent = reversed.join("");
+          if (reverseLog) reverseLog.textContent = `POP Selesai! Kata berhasil dibalik sempurna menggunakan prinsip LIFO.`;
+        });
+      }
+
+      // ----------------------------------------------------
+      // MISI 2: BALANCED BRACKETS
+      // ----------------------------------------------------
+      const inputBrackets = document.getElementById("input-brackets");
+      const btnCheckBrackets = document.getElementById("btn-check-brackets");
+      const bracketResultText = document.getElementById("bracket-result-text");
+      const bracketStackPreview = document.getElementById("bracket-stack-preview");
+      const bracketLog = document.getElementById("bracket-log");
+
+      function testBrackets(expr) {
+        const stack = [];
+        const pairs = { ')': '(', ']': '[', '}': '{' };
+        const logs = [];
+
+        for (let i = 0; i < expr.length; i++) {
+          const ch = expr[i];
+          if (ch === '(' || ch === '[' || ch === '{') {
+            stack.push(ch);
+            logs.push(`Karakter '${ch}' di posisi ${i}: PUSH ke stack.`);
+          } else if (ch === ')' || ch === ']' || ch === '}') {
+            if (stack.length === 0) {
+              logs.push(`ERROR di posisi ${i}: Kurung tutup '${ch}' ditemukan tetapi stack kosong!`);
+              return { valid: false, logs, stack };
+            }
+            const top = stack.pop();
+            if (top !== pairs[ch]) {
+              logs.push(`ERROR di posisi ${i}: Kurung '${ch}' tidak cocok dengan kurung buka '${top}'!`);
+              return { valid: false, logs, stack };
+            } else {
+              logs.push(`Cocok: '${top}' dipasangkan dengan '${ch}'. POP berhasil.`);
+            }
+          }
+        }
+
+        if (stack.length > 0) {
+          logs.push(`ERROR di akhir: Masih ada ${stack.length} kurung buka yang belum ditutup: ${stack.join(", ")}`);
+          return { valid: false, logs, stack };
+        }
+
+        logs.push("Validasi Selesai: Semua kurung seimbang dan tertutup sempurna!");
+        return { valid: true, logs, stack };
+      }
+
+      if (btnCheckBrackets) {
+        btnCheckBrackets.addEventListener("click", () => {
+          const expr = inputBrackets.value;
+          const result = testBrackets(expr);
+
+          if (result.valid) {
+            bracketResultText.className = "font-code-block text-xs sm:text-sm font-bold text-secondary mt-0.5 flex items-center gap-1";
+            bracketResultText.innerHTML = `<span class="material-symbols-outlined text-base">check_circle</span> Sintaks Valid (Seimbang)`;
+          } else {
+            bracketResultText.className = "font-code-block text-xs sm:text-sm font-bold text-error mt-0.5 flex items-center gap-1";
+            bracketResultText.innerHTML = `<span class="material-symbols-outlined text-base">cancel</span> Sintaks Tidak Seimbang`;
+          }
+
+          if (bracketStackPreview) bracketStackPreview.textContent = `Stack Sisa: [ ${result.stack.join(", ")} ]`;
+          if (bracketLog) bracketLog.innerHTML = result.logs.map(l => `<div>&bull; ${l}</div>`).join("");
+        });
+      }
+
+      // ----------------------------------------------------
+      // MISI 3: SIMULATOR ANTREAN KAFETARIA (QUEUE)
+      // ----------------------------------------------------
+      let studentQueue = ["Andi (#01)", "Budi (#02)", "Citra (#03)"];
+      let ticketCounter = 4;
+      const studentTube = document.getElementById("queue-student-tube");
+      const btnEnqueueStudent = document.getElementById("btn-enqueue-student");
+      const btnDequeueStudent = document.getElementById("btn-dequeue-student");
+      const btnResetQueue = document.getElementById("btn-reset-queue-sim");
+      const queueServedName = document.getElementById("queue-served-name");
+
+      function renderStudentTube() {
+        if (!studentTube) return;
+        studentTube.innerHTML = "";
+        if (studentQueue.length === 0) {
+          studentTube.innerHTML = `<span class="text-[11px] text-on-primary-container font-code-block italic m-auto">Antrean kosong, loket sedang senggang.</span>`;
+          return;
+        }
+
+        studentQueue.forEach((name, idx) => {
+          const pill = document.createElement("div");
+          const isFront = idx === 0;
+          const isRear = idx === studentQueue.length - 1;
+
+          pill.className = `px-2.5 py-1.5 rounded-lg text-xs font-code-block font-bold whitespace-nowrap shadow-xs flex items-center gap-1 ${
+            isFront ? "bg-tertiary-fixed-dim text-on-tertiary-fixed ring-1 ring-white" : "bg-secondary text-on-secondary"
+          }`;
+          pill.innerHTML = `
+            ${isFront ? '<span class="text-[9px] bg-primary text-on-primary px-1 py-0.2 rounded">FRONT</span>' : ''}
+            <span>${name}</span>
+            ${isRear && !isFront ? '<span class="text-[9px] bg-primary-container text-secondary px-1 py-0.2 rounded">REAR</span>' : ''}
+          `;
+          studentTube.appendChild(pill);
+        });
+      }
+
+      const sampleNames = ["Dewi", "Eko", "Fajar", "Gita", "Hadi", "Indah", "Joko"];
+
+      if (btnEnqueueStudent) {
+        btnEnqueueStudent.addEventListener("click", () => {
+          if (studentQueue.length >= 5) {
+            alert("Antrean kafetaria sudah mencapai batas maksimal (5 siswa)! Layani siswa terdepan terlebih dahulu.");
+            return;
+          }
+          const randomName = sampleNames[Math.floor(Math.random() * sampleNames.length)];
+          const newStudent = `${randomName} (#${String(ticketCounter++).padStart(2, "0")})`;
+          studentQueue.push(newStudent);
+          renderStudentTube();
+        });
+      }
+
+      if (btnDequeueStudent) {
+        btnDequeueStudent.addEventListener("click", () => {
+          if (studentQueue.length === 0) {
+            alert("Antrean sudah kosong!");
+            return;
+          }
+          const served = studentQueue.shift();
+          renderStudentTube();
+          if (queueServedName) {
+            queueServedName.textContent = served;
+          }
+        });
+      }
+
+      if (btnResetQueue) {
+        btnResetQueue.addEventListener("click", () => {
+          studentQueue = ["Andi (#01)", "Budi (#02)"];
+          ticketCounter = 3;
+          renderStudentTube();
+          if (queueServedName) queueServedName.textContent = "Belum ada";
+        });
+      }
+
+      // Initial Renders
+      renderStudentTube();
+      renderMiniStack();
+    });
+  </script>
+</body>
+</html>
