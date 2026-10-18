@@ -4,9 +4,9 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>Dashboard Guru — Ruang Logika | Monitoring &amp; Rekap Nilai Siswa</title>
-  <meta name="description" content="Portal pemantauan guru untuk mengevaluasi capaian belajar siswa, rekap skor kuis Firestore, dan program remediasi struktur data linear. Pengembang: Yusuf Nurul Huda."/>
-  <meta property="og:title" content="Dashboard Guru — Ruang Logika | Monitoring &amp; Rekap Nilai Siswa"/>
-  <meta property="og:description" content="Dashboard Guru Ruang Logika - Pengembang: Yusuf Nurul Huda."/>
+  <meta name="description" content="Dashboard Guru Ruang Logika: monitoring ketercapaian belajar siswa, buku nilai kuis, dan panduan apersepsi pedagogis Struktur Data SMA. Pengembang: Yusuf Nurul Huda."/>
+  <meta property="og:title" content="Dashboard Guru — Ruang Logika"/>
+  <meta property="og:description" content="Dashboard Pemantauan Pembelajaran Guru Ruang Logika. Pengembang: Yusuf Nurul Huda."/>
   <meta property="og:type" content="website"/>
 
   <!-- Google Typography & Material Icons -->
@@ -78,262 +78,359 @@
     };
   </script>
 </head>
-<body id="teacher-dashboard-root" class="bg-surface font-body-md text-on-surface antialiased">
+<body id="teacher-dashboard-root" class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col">
   
-  <!-- Fixed Top Header (Google Stitch Navbar) -->
-  <header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl border-b border-outline-variant/40">
-    <div class="h-16 w-[95vw] mx-auto px-2 sm:px-4 flex items-center justify-between gap-3 sm:gap-4">
-      <div class="flex items-center gap-3">
-        <a class="flex items-center gap-2.5" href="index.html">
-          <div class="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center text-on-secondary shadow-sm">
-            <span class="material-symbols-outlined text-xl">account_tree</span>
-          </div>
-          <div class="flex flex-col">
-            <span class="font-headline-md text-lg font-bold tracking-tight text-primary leading-none">Ruang Logika</span>
-            <span class="font-label-md text-[11px] text-on-surface-variant leading-none mt-1">Dashboard Guru</span>
-          </div>
-        </a>
-      </div>
+  <!-- Fixed Topbar (Header) with Dynamic Greeting -->
+  <header class="fixed top-0 left-0 right-0 h-16 bg-surface-container-lowest/95 backdrop-blur-md z-40 border-b border-outline-variant/40 flex items-center justify-between px-4 lg:px-6">
+    <div class="flex items-center gap-3">
+      <!-- Mobile Sidebar Toggle -->
+      <button id="btn-toggle-sidebar" type="button" aria-label="Buka Menu Navigasi" class="lg:hidden p-2 rounded-xl text-primary hover:bg-surface-container transition cursor-pointer">
+        <span class="material-symbols-outlined text-2xl">menu</span>
+      </button>
 
-      <nav class="hidden xl:flex items-center gap-1">
-        <a aria-current="page" class="px-3 py-2 transition-colors bg-primary-container text-on-primary-container font-headline-md text-body-sm rounded-lg shadow-sm" href="dashboard-guru.html">Dashboard Guru</a>
-        <a class="px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="peta-belajar.html">Peta Belajar</a>
-        <a class="px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="materi.html">Materi</a>
-        <a class="px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="laboratorium.html">Lab Interaktif</a>
-        <a class="px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="tantangan.html">Tantangan Kasus</a>
-        <a class="px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="kuis.html">Kuis &amp; Evaluasi</a>
-      </nav>
-
-      <div class="flex items-center gap-2 sm:gap-3">
-        <div class="hidden sm:flex items-center gap-1.5 bg-surface-container px-2.5 py-1 rounded-full border border-outline-variant/60">
-          <span class="material-symbols-outlined text-secondary text-base">co_present</span>
-          <span class="font-label-md text-xs text-on-surface font-semibold">Pendidik / Guru</span>
+      <!-- Logo & App Title -->
+      <a class="flex items-center gap-2.5" href="index.html">
+        <div class="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center text-on-secondary shadow-sm">
+          <span class="material-symbols-outlined text-xl">account_tree</span>
         </div>
+        <div class="flex flex-col">
+          <span class="font-headline-md text-lg font-bold tracking-tight text-primary leading-none">Ruang Logika</span>
+          <span class="font-label-md text-[11px] text-secondary font-semibold leading-none mt-1">Portal Pendidik</span>
+        </div>
+      </a>
+    </div>
 
-        <button id="btn-logout" type="button" class="flex items-center gap-1.5 px-3 py-1.5 bg-surface-container-high text-primary rounded-lg font-headline-md text-xs font-semibold hover:bg-surface-container-highest transition">
-          <span class="material-symbols-outlined text-sm">logout</span>
-          <span>Keluar</span>
-        </button>
+    <!-- Topbar Right: Dynamic Teacher Greeting & Role Badge -->
+    <div class="flex items-center gap-3 sm:gap-4">
+      <!-- Role Badge -->
+      <div class="hidden sm:flex items-center gap-1.5 bg-blue-100 text-blue-800 px-3 py-1 rounded-full border border-blue-200">
+        <span class="material-symbols-outlined text-sm text-blue-700">co_present</span>
+        <span class="font-label-md text-xs font-bold">Pendidik / Guru</span>
       </div>
+
+      <!-- Sapaan Guru Dinamis -->
+      <div class="flex items-center gap-2.5 pl-2 sm:border-l border-outline-variant/40">
+        <div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container font-code-block font-bold text-xs flex items-center justify-center shadow-xs">
+          <span class="material-symbols-outlined text-base">school</span>
+        </div>
+        <div class="hidden md:flex flex-col text-left">
+          <span class="font-headline-md text-xs font-bold text-primary leading-tight">
+            Halo, <span class="user-display-name">Budi Santoso, M.Kom</span>
+          </span>
+          <span class="font-label-md text-[10px] text-on-surface-variant">Guru Informatika</span>
+        </div>
+      </div>
+
+      <!-- Tombol Cetak & Quick Logout -->
+      <button type="button" onclick="window.print()" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-secondary text-on-secondary hover:bg-secondary/90 rounded-xl font-headline-md text-xs font-semibold shadow-xs transition cursor-pointer">
+        <span class="material-symbols-outlined text-sm">print</span>
+        <span>Cetak Rekap</span>
+      </button>
+
+      <button id="btn-logout" type="button" class="flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface hover:text-error hover:bg-error-container/20 rounded-xl font-headline-md text-xs font-semibold transition cursor-pointer">
+        <span class="material-symbols-outlined text-base">logout</span>
+        <span class="hidden sm:inline">Keluar</span>
+      </button>
     </div>
   </header>
 
-  <!-- Main Fluid Workspace (95vw) -->
-  <main class="w-full pt-16 bg-surface min-h-[calc(100vh-16rem)]">
-    <div class="flex flex-col w-full">
-      <div class="w-[95vw] mx-auto py-4 flex flex-col gap-4">
+  <!-- Backdrop Overlay for Mobile Sidebar -->
+  <div id="sidebar-overlay" class="fixed inset-0 z-40 bg-primary/40 backdrop-blur-xs hidden lg:hidden transition-opacity"></div>
+
+  <!-- Main Container: Role-Based Sidebar + Workspace -->
+  <div class="pt-16 flex flex-1 w-full min-h-[calc(100vh-4rem)]">
+    
+    <!-- ROLE-BASED SIDEBAR (GURU) -->
+    <!-- STRICT CONSTRAINT: HANYA Dashboard, Buku Nilai Siswa, Panduan Apersepsi, dan Logout -->
+    <aside id="dashboard-sidebar" class="fixed lg:static top-16 bottom-0 left-0 w-64 bg-surface-container-lowest border-r border-outline-variant/40 z-50 flex flex-col justify-between p-4 -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out shrink-0">
+      
+      <div class="flex flex-col gap-5">
+        <!-- Sidebar Profile Card -->
+        <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-primary text-tertiary-fixed-dim flex items-center justify-center font-code-block font-bold text-sm shadow-xs">
+            GR
+          </div>
+          <div class="flex flex-col min-w-0">
+            <span class="font-headline-md text-xs font-bold text-primary truncate user-display-name">Bpk. Budi Santoso, M.Kom</span>
+            <span class="font-label-md text-[10px] text-secondary font-semibold">Pendidik Informatika</span>
+          </div>
+        </div>
+
+        <!-- Section Label -->
+        <div class="px-2">
+          <span class="font-label-md text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Navigasi Pendidik</span>
+        </div>
+
+        <!-- 4 Menu Guru yang Relevan Saja (Single-Page Tab Switching) -->
+        <nav class="flex flex-col gap-1.5" id="guru-sidebar-nav">
+          
+          <!-- 1. Dashboard (Active by default) -->
+          <button type="button" data-tab-target="tab-dashboard" class="sidebar-tab-btn active flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-primary-container text-on-primary-container font-headline-md text-xs font-bold shadow-sm transition text-left cursor-pointer w-full">
+            <span class="material-symbols-outlined text-lg text-secondary">analytics</span>
+            <span>Dashboard</span>
+          </button>
+
+          <!-- 2. Buku Nilai Siswa -->
+          <button type="button" data-tab-target="tab-buku-nilai" class="sidebar-tab-btn flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-headline-md text-xs font-semibold transition text-left cursor-pointer w-full">
+            <span class="material-symbols-outlined text-lg">menu_book</span>
+            <span>Buku Nilai Siswa</span>
+          </button>
+
+          <!-- 3. Panduan Apersepsi -->
+          <button type="button" data-tab-target="tab-panduan-apersepsi" class="sidebar-tab-btn flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-headline-md text-xs font-semibold transition text-left cursor-pointer w-full">
+            <span class="material-symbols-outlined text-lg">lightbulb</span>
+            <span>Panduan Apersepsi</span>
+          </button>
+
+        </nav>
+      </div>
+
+      <!-- 4. Logout Menu di Bawah Sidebar -->
+      <div class="pt-4 border-t border-outline-variant/40 flex flex-col gap-2">
+        <button type="button" class="btn-logout-action w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-error hover:bg-error-container/20 font-headline-md text-xs font-bold transition cursor-pointer">
+          <span class="material-symbols-outlined text-lg">logout</span>
+          <span>Logout</span>
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- MAIN DASHBOARD CONTENT AREA -->
+    <main class="flex-1 p-4 lg:p-7 overflow-y-auto">
+      <div class="max-w-7xl mx-auto flex flex-col gap-6">
         
-        <!-- Header Banner Card (Stitch Style) -->
-        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-surface-container-lowest p-4 sm:p-5 rounded-xl shadow-sm border border-outline-variant/20">
-          <div class="flex flex-col">
-            <div class="flex items-center gap-2">
-              <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-secondary text-on-secondary">
-                <span class="material-symbols-outlined text-base">analytics</span>
-              </span>
-              <span class="font-label-md text-xs uppercase tracking-wider text-secondary font-bold">Panel Pemantauan Capaian Siswa</span>
-            </div>
-            <h1 class="font-headline-xl text-xl sm:text-2xl text-primary tracking-tight mt-1 font-bold">
-              Selamat Mengajar, <span id="teacher-name" class="text-secondary">Bpk. Budi Santoso, M.Kom</span> 👨‍🏫
-            </h1>
-            <p class="font-body-sm text-xs sm:text-sm text-on-surface-variant">
-              Evaluasi ketercapaian kompetensi Struktur Data Linear (Stack &amp; Queue) siswa secara real-time dari Cloud Firestore.
-            </p>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <button type="button" onclick="window.print()" class="flex items-center gap-1.5 px-4 py-2 bg-secondary text-on-secondary rounded-lg font-headline-md text-xs sm:text-sm font-semibold hover:bg-secondary/90 shadow-sm transition">
-              <span class="material-symbols-outlined text-base">print</span>
-              <span>Cetak Rekap Nilai</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- STATS OVERVIEW CARDS (Stitch Bento) -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <!-- TAB 1: DASHBOARD OVERVIEW (DEFAULT VISIBLE) -->
+        <div id="tab-dashboard" class="tab-pane active-tab flex flex-col gap-6 w-full">
           
-          <div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant/30 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-xl">trending_up</span>
-            </div>
+          <!-- Header Banner Card (Stitch Style) -->
+          <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/30">
             <div class="flex flex-col">
-              <span class="font-label-md text-[10px] text-on-surface-variant uppercase">Rata-Rata Kelas</span>
-              <span id="stat-class-avg" class="font-code-block text-xl font-bold text-primary mt-0.5">85</span>
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-secondary text-on-secondary">
+                  <span class="material-symbols-outlined text-base">co_present</span>
+                </span>
+                <span class="font-label-md text-xs uppercase tracking-wider text-secondary font-bold">Panel Pemantauan Guru</span>
+              </div>
+              <h1 class="font-headline-xl text-xl sm:text-2xl text-primary tracking-tight mt-1.5 font-bold">
+                Selamat Mengajar, <span id="teacher-name" class="text-secondary user-display-name">Bpk. Budi Santoso, M.Kom</span> 👨‍🏫
+              </h1>
+              <p class="font-body-sm text-xs sm:text-sm text-on-surface-variant max-w-2xl mt-0.5">
+                Pantau ketercapaian kompetensi Struktur Data Linear (Stack &amp; Queue) seluruh siswa secara real-time dari data Cloud Firestore.
+              </p>
+            </div>
+
+            <div class="flex items-center gap-3 shrink-0">
+              <button type="button" onclick="window.print()" class="flex items-center gap-1.5 px-4 py-2.5 bg-secondary text-on-secondary rounded-xl font-headline-md text-xs sm:text-sm font-bold hover:bg-secondary/90 shadow-sm transition cursor-pointer">
+                <span class="material-symbols-outlined text-base">print</span>
+                <span>Cetak Rekap Kelas</span>
+              </button>
             </div>
           </div>
 
-          <div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant/30 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-xl">groups</span>
-            </div>
-            <div class="flex flex-col">
-              <span class="font-label-md text-[10px] text-on-surface-variant uppercase">Siswa Terdata</span>
-              <span id="stat-total-students" class="font-code-block text-xl font-bold text-primary mt-0.5">6 Siswa</span>
-            </div>
-          </div>
-
-          <div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant/30 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-xl">task_alt</span>
-            </div>
-            <div class="flex flex-col">
-              <span class="font-label-md text-[10px] text-on-surface-variant uppercase">Tingkat Ketuntasan</span>
-              <span id="stat-pass-rate" class="font-code-block text-xl font-bold text-secondary mt-0.5">83%</span>
-            </div>
-          </div>
-
-          <div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant/30 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-error-container text-error flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-xl">warning</span>
-            </div>
-            <div class="flex flex-col">
-              <span class="font-label-md text-[10px] text-on-surface-variant uppercase">Perlu Remedial</span>
-              <span id="stat-remediation-count" class="font-code-block text-xl font-bold text-error mt-0.5">1 Siswa</span>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- 2-COLUMN MAIN CONTENT (Bento Stitch) -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
-          
-          <!-- LEFT: GRADEBOOK TABLE (8 cols) -->
-          <div class="lg:col-span-8 flex flex-col gap-4">
+          <!-- STATS OVERVIEW CARDS (Stitch Bento) -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             
-            <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant/30 flex flex-col gap-3">
-              <div class="flex items-center justify-between pb-2 border-b border-outline-variant/30">
-                <div class="flex items-center gap-2">
-                  <span class="material-symbols-outlined text-secondary text-lg">format_list_numbered</span>
-                  <h3 class="font-headline-md text-sm font-bold text-primary">Buku Nilai Siswa (Firestore Sync)</h3>
+            <div class="bg-surface-container-lowest rounded-2xl p-4 sm:p-5 shadow-sm border border-outline-variant/30 flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-2xl">trending_up</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-wider">Rata-Rata Kelas</span>
+                <span id="stat-class-avg" class="font-code-block text-2xl font-bold text-primary mt-0.5">85</span>
+              </div>
+            </div>
+
+            <div class="bg-surface-container-lowest rounded-2xl p-4 sm:p-5 shadow-sm border border-outline-variant/30 flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-2xl">groups</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-wider">Siswa Terdata</span>
+                <span id="stat-total-students" class="font-code-block text-2xl font-bold text-primary mt-0.5">6 Siswa</span>
+              </div>
+            </div>
+
+            <div class="bg-surface-container-lowest rounded-2xl p-4 sm:p-5 shadow-sm border border-outline-variant/30 flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-2xl">task_alt</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-wider">Tingkat Ketuntasan</span>
+                <span id="stat-pass-rate" class="font-code-block text-2xl font-bold text-secondary mt-0.5">83%</span>
+              </div>
+            </div>
+
+            <div class="bg-surface-container-lowest rounded-2xl p-4 sm:p-5 shadow-sm border border-outline-variant/30 flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-2xl">warning</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-wider">Perlu Remedial</span>
+                <span id="stat-remediation-count" class="font-code-block text-2xl font-bold text-rose-600 mt-0.5">1 Siswa</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bento Quick Links for Fast Jump -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 flex items-center justify-between hover:border-secondary transition shadow-sm">
+              <div class="flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center">
+                  <span class="material-symbols-outlined text-xl">menu_book</span>
                 </div>
-                <span class="font-label-md text-[11px] text-on-surface-variant bg-surface-container px-2.5 py-1 rounded-full">KKM Standar: 70</span>
+                <div>
+                  <h4 class="font-headline-md text-sm font-bold text-primary">Rekapitulasi Nilai Siswa</h4>
+                  <p class="font-body-sm text-xs text-on-surface-variant">Lihat daftar lengkap evaluasi kuis dan capaian siswa.</p>
+                </div>
+              </div>
+              <button type="button" data-tab-target="tab-buku-nilai" class="px-3 py-1.5 rounded-lg bg-surface-container-high text-primary hover:bg-secondary hover:text-white font-headline-md text-xs font-semibold transition cursor-pointer">
+                Buka
+              </button>
+            </div>
+
+            <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 flex items-center justify-between hover:border-secondary transition shadow-sm">
+              <div class="flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center">
+                  <span class="material-symbols-outlined text-xl">lightbulb</span>
+                </div>
+                <div>
+                  <h4 class="font-headline-md text-sm font-bold text-primary">Panduan Apersepsi Guru</h4>
+                  <p class="font-body-sm text-xs text-on-surface-variant">Strategi analogi LIFO &amp; FIFO serta daftar siswa remedial.</p>
+                </div>
+              </div>
+              <button type="button" data-tab-target="tab-panduan-apersepsi" class="px-3 py-1.5 rounded-lg bg-surface-container-high text-primary hover:bg-secondary hover:text-white font-headline-md text-xs font-semibold transition cursor-pointer">
+                Buka
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TAB 2: BUKU NILAI SISWA (GRADEBOOK) -->
+        <div id="tab-buku-nilai" class="tab-pane hidden flex flex-col gap-6 w-full">
+          <section id="buku-nilai-section" class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-outline-variant/30">
+              <div class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-secondary text-2xl">menu_book</span>
+                <div>
+                  <h2 class="font-headline-lg text-lg font-bold text-primary">Buku Nilai Siswa (Rekapitulasi Cloud)</h2>
+                  <p class="font-body-sm text-xs text-on-surface-variant">Data nilai hasil kuis dan tantangan yang disinkronkan otomatis dari Cloud Firestore.</p>
+                </div>
               </div>
 
-              <div class="overflow-x-auto rounded-lg border border-outline-variant/30">
-                <table class="w-full text-left font-body-sm text-xs">
-                  <thead class="bg-surface-container font-headline-md text-on-surface text-[11px] uppercase tracking-wider border-b border-outline-variant/30">
-                    <tr>
-                      <th class="py-2.5 px-3">#</th>
-                      <th class="py-2.5 px-3">Nama Siswa</th>
-                      <th class="py-2.5 px-3">Email</th>
-                      <th class="py-2.5 px-3">Kuis</th>
-                      <th class="py-2.5 px-3">Tanggal</th>
-                      <th class="py-2.5 px-3">Skor</th>
-                      <th class="py-2.5 px-3">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody id="teacher-gradebook-tbody">
-                    <!-- Populated by js/db.js -->
-                  </tbody>
-                </table>
+              <div class="flex items-center gap-2">
+                <span class="font-label-md text-xs px-2.5 py-1 rounded-lg bg-surface-container-low text-on-surface-variant font-medium">KKM: &ge; 70</span>
+                <button type="button" onclick="window.print()" class="flex items-center gap-1 px-3 py-1 bg-surface-container-high text-primary rounded-lg font-headline-md text-xs font-semibold hover:bg-surface-container-highest transition">
+                  <span class="material-symbols-outlined text-sm">print</span>
+                  <span>Cetak</span>
+                </button>
               </div>
             </div>
 
-          </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-outline-variant/30 text-on-surface-variant font-label-md text-[11px] uppercase tracking-wider">
+                    <th class="py-3 px-4">No</th>
+                    <th class="py-3 px-4">Nama Siswa</th>
+                    <th class="py-3 px-4">Email Siswa</th>
+                    <th class="py-3 px-4">Topik Uji</th>
+                    <th class="py-3 px-4">Tanggal Uji</th>
+                    <th class="py-3 px-4">Skor</th>
+                    <th class="py-3 px-4">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="teacher-gradebook-tbody">
+                  <!-- Diisi secara otomatis oleh js/db.js -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
 
-          <!-- RIGHT: REMEDIATION & PEDAGOGICAL TIPS (4 cols) -->
-          <div class="lg:col-span-4 flex flex-col gap-4">
+        <!-- TAB 3: PANDUAN APERSEPSI & REMEDIASI -->
+        <div id="tab-panduan-apersepsi" class="tab-pane hidden flex flex-col gap-6 w-full">
+          <section id="panduan-apersepsi-section" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <!-- Remediation Action List -->
-            <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant/30 flex flex-col gap-3">
-              <div class="flex items-center gap-2 pb-2 border-b border-outline-variant/30">
-                <span class="material-symbols-outlined text-error text-lg">assignment_late</span>
-                <h4 class="font-headline-md text-xs font-bold text-primary uppercase tracking-wider">Tindak Lanjut Remedial</h4>
+            <!-- Panduan Pembelajaran & Apersepsi -->
+            <div class="lg:col-span-8 bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-4">
+              <div class="flex items-center gap-2.5 pb-3 border-b border-outline-variant/30">
+                <span class="material-symbols-outlined text-secondary text-xl">lightbulb</span>
+                <h3 class="font-headline-lg text-base sm:text-lg font-bold text-primary">Panduan Apersepsi &amp; Strategi Pedagogis Guru</h3>
               </div>
-              <p class="font-body-sm text-[11px] text-on-surface-variant leading-relaxed">
-                Siswa dengan nilai di bawah KKM (70) disarankan mengulang simulasi visual di Lab sebelum mengerjakan kuis susulan.
-              </p>
-              <div id="teacher-remediation-list" class="flex flex-col gap-2">
-                <!-- Populated by js/db.js -->
+
+              <div class="flex flex-col gap-3 text-xs leading-relaxed text-on-surface">
+                <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col gap-1.5">
+                  <span class="font-headline-md font-bold text-primary text-xs flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-secondary text-sm">psychology</span>
+                    1. Apersepsi Konsep Stack (LIFO):
+                  </span>
+                  <p class="font-body-sm text-on-surface-variant">
+                    Ajak siswa membayangkan tumpukan baki kafetaria atau riwayat pengetikan <em>Undo (Ctrl+Z)</em>. Tekankan bahwa satu-satunya titik akses penambahan dan pengambilan elemen hanya berada pada puncak (TOP).
+                  </p>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col gap-1.5">
+                  <span class="font-headline-md font-bold text-primary text-xs flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-secondary text-sm">groups</span>
+                    2. Apersepsi Konsep Queue (FIFO):
+                  </span>
+                  <p class="font-body-sm text-on-surface-variant">
+                    Gunakan analogi antrean tiket bioskop atau loket kantin. Tekankan nilai karakter keadilan sosial: siapa yang datang lebih dulu di pintu belakang (REAR) berhak dilayani paling awal di pintu depan (FRONT).
+                  </p>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col gap-1.5">
+                  <span class="font-headline-md font-bold text-primary text-xs flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-secondary text-sm">checklist</span>
+                    3. Indikator Ketercapaian Tujuan Pembelajaran:
+                  </span>
+                  <p class="font-body-sm text-on-surface-variant">
+                    Siswa mampu membedakan karakteristik LIFO dan FIFO, mendemonstrasikan operasi Push/Pop serta Enqueue/Dequeue pada simulator, dan menyelesaikan studi kasus kontekstual dengan skor kuis &ge; 70.
+                  </p>
+                </div>
               </div>
             </div>
 
-            <!-- Pedagogical Tips Card -->
-            <div class="bg-primary-container text-on-primary-container rounded-xl p-5 shadow-sm border border-outline-variant/40 flex flex-col gap-2.5">
-              <div class="flex items-center gap-1.5 font-label-md text-xs text-tertiary-fixed-dim font-bold">
-                <span class="material-symbols-outlined text-sm">lightbulb</span> Tips Pedagogi Demonstrasi Kelas
+            <!-- Target Bimbingan Remedial -->
+            <div class="lg:col-span-4 bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-4">
+              <div class="flex items-center gap-2 pb-3 border-b border-outline-variant/30">
+                <span class="material-symbols-outlined text-rose-600 text-xl">person_alert</span>
+                <h3 class="font-headline-md text-sm font-bold text-primary">Siswa Butuh Remedial</h3>
               </div>
-              <p class="font-body-sm text-xs text-on-primary-container leading-relaxed">
-                Tampilkan <strong>Laboratorium Virtual</strong> pada proyektor LCD kelas. Tunjuk 2 siswa untuk mendemonstrasikan Push/Pop dan Enqueue/Dequeue agar konsep memori visual dapat dipahami bersama secara interaktif.
-              </p>
-              <a href="laboratorium.html" class="inline-flex items-center gap-1 text-xs font-bold text-secondary hover:underline pt-1">
-                Buka Laboratorium Virtual &rarr;
-              </a>
+
+              <div id="teacher-remediation-list" class="flex flex-col gap-2.5">
+                <!-- Diisi oleh js/db.js -->
+              </div>
             </div>
 
-          </div>
-
+          </section>
         </div>
 
       </div>
-    </div>
-  </main>
+    </main>
+
+  </div>
 
   <!-- Google Stitch Footer -->
-  <footer class="w-full bg-surface-container-lowest border-t border-outline-variant/40 mt-8 py-8 transition-colors">
-    <div class="w-[95vw] mx-auto px-2 sm:px-4 flex flex-col gap-6">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        
-        <div class="flex flex-col gap-2 md:col-span-1">
-          <div class="flex items-center gap-2">
-            <div class="w-7 h-7 rounded-lg bg-secondary flex items-center justify-center text-on-secondary shadow-xs">
-              <span class="material-symbols-outlined text-base">account_tree</span>
-            </div>
-            <span class="font-headline-md text-base font-bold text-primary">Ruang Logika</span>
-          </div>
-          <p class="font-body-sm text-xs text-on-surface-variant max-w-sm leading-relaxed">
-            Platform Pembelajaran Interaktif Struktur Data &amp; Algoritma untuk Generasi Digital SMA.
-          </p>
-          <div class="flex items-center gap-2 mt-1">
-            <span class="font-label-md text-[11px] px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-semibold">
-              Edisi Siswa SMA Kelas X
-            </span>
-          </div>
-        </div>
-
-        <div class="flex flex-col gap-1.5">
-          <span class="font-headline-md text-sm font-semibold text-on-surface mb-1">Navigasi Cepat</span>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="index.html">Beranda</a>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="peta-belajar.html">Peta Belajar</a>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="materi.html">Materi Pembelajaran</a>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="laboratorium.html">Laboratorium Virtual</a>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="tantangan.html">Studi Kasus</a>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="kuis.html">Uji Kompetensi</a>
-        </div>
-
-        <div class="flex flex-col gap-1.5">
-          <span class="font-headline-md text-sm font-semibold text-on-surface mb-1">Fasilitas &amp; Peran</span>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="dashboard-siswa.html">Dashboard Siswa</a>
-          <a class="font-body-sm text-xs text-secondary font-bold" href="dashboard-guru.html">Pemantauan Guru</a>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="dashboard-admin.html">Tata Kelola Admin</a>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="login.html">Portal Akses Akun</a>
-        </div>
-
-        <div class="flex flex-col gap-1.5">
-          <span class="font-headline-md text-sm font-semibold text-on-surface mb-1">Pengembang &amp; Hak Cipta</span>
-          <div class="p-3 rounded-lg bg-surface-container border border-outline-variant/60 flex flex-col gap-1">
-            <span class="font-label-md text-[11px] text-on-surface-variant">Penanggung Jawab Sistem:</span>
-            <span class="font-headline-md text-xs font-bold text-primary">Pengembang: Yusuf Nurul Huda</span>
-            <span class="font-body-sm text-[11px] text-on-surface-variant mt-0.5">Spesialisasi Kurikulum Informatika SMA &amp; Media Interaktif Algoritma.</span>
-          </div>
-        </div>
-
+  <footer class="w-full bg-surface-container-lowest border-t border-outline-variant/40 py-6 transition-colors">
+    <div class="w-[95vw] mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-on-surface-variant">
+      <div class="flex items-center gap-2">
+        <span class="font-headline-md font-bold text-primary">Ruang Logika</span>
+        <span>&bull;</span>
+        <span>Portal Khusus Pendidik Informatika</span>
       </div>
-
-      <div class="border-t border-outline-variant/40 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-        <p class="font-body-sm text-xs text-on-surface-variant text-center sm:text-left">
-          &copy; 2025 Ruang Logika. Hak Cipta Dilindungi Undang-Undang. Pengembang: Yusuf Nurul Huda
-        </p>
-        <div class="flex items-center gap-4">
-          <span class="font-label-md text-xs text-on-surface-variant font-medium">SMA Kelas X &bull; Informatika</span>
-        </div>
+      <div>
+        <strong>Pengembang: Yusuf Nurul Huda</strong>
       </div>
     </div>
   </footer>
 
-  <!-- Module Scripts -->
+  <!-- Scripts -->
   <script type="module" src="js/firebase-config.js"></script>
   <script type="module" src="js/auth.js"></script>
-  <script type="module" src="js/main.js"></script>
   <script type="module" src="js/db.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>

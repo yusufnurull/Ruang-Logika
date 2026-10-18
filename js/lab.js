@@ -146,6 +146,14 @@ export function switchLabMode(mode) {
     appendTerminalLog("Beralih ke Simulator Queue (FIFO). Pointer horizontal FRONT & REAR diaktifkan.", "text-tertiary-fixed font-bold");
   }
 
+  updateRealtimeExplanation(
+    "switch", 
+    mode, 
+    mode === "stack" 
+      ? "Karakteristik LIFO aktif: Akses data hanya melalui 1 pintu di posisi puncak (TOP)."
+      : "Karakteristik FIFO aktif: Akses data melalui 2 pintu (Masuk dari REAR, Keluar dari FRONT)."
+  );
+
   renderLabState();
 }
 
@@ -159,6 +167,11 @@ export function handleStackPush() {
   if (currentCount >= LabEngine.maxCapacity) {
     appendTerminalLog(`[OVERFLOW] Gagal PUSH: Stack sudah penuh (${currentCount}/${LabEngine.maxCapacity} elemen)! Lakukan POP terlebih dahulu.`, "text-error-container font-bold");
     triggerWarningShake("stack-canvas-view");
+    updateRealtimeExplanation(
+      "overflow", 
+      "", 
+      `Kapasitas maksimum ${LabEngine.maxCapacity} slot telah tercapai. Lakukan POP terlebih dahulu untuk mengosongkan memori.`
+    );
     if (window.showAppToast) window.showAppToast("Stack Overflow! Kapasitas maksimal 5 elemen.", "error");
     return;
   }
@@ -173,6 +186,13 @@ export function handleStackPush() {
   document.getElementById("stack-last-op").textContent = `PUSH('${value}')`;
   appendTerminalLog(`[PUSH] Sukses memasukkan '${value}' ke puncak tumpukan. Ukuran sekarang: ${LabEngine.stackData.length}/${LabEngine.maxCapacity}. TOP menunjuk ke Indeks [${newIndex}].`, "text-secondary-fixed");
 
+  // Real-time Scaffolding Explanation
+  updateRealtimeExplanation(
+    "push", 
+    value, 
+    `Operasi PUSH meletakkan data baru '${value}' tepat di atas penunjuk TOP (Indeks [${newIndex}]). Elemen ini menjadi yang teratas dan akan pertama kali keluar jika dilakukan POP.`
+  );
+
   if (window.showAppToast) window.showAppToast(`PUSH('${value}') sukses masuk.`, "success");
 
   renderLabState();
@@ -186,6 +206,11 @@ export function handleStackPop() {
   if (currentCount === 0) {
     appendTerminalLog(`[UNDERFLOW] Gagal POP: Stack kosong melompong (0 elemen)! Tidak ada data yang dapat diambil.`, "text-error-container font-bold");
     triggerWarningShake("stack-canvas-view");
+    updateRealtimeExplanation(
+      "underflow", 
+      "", 
+      "Tumpukan saat ini kosong melompong (0 elemen). Tidak ada data di posisi TOP untuk dikeluarkan."
+    );
     if (window.showAppToast) window.showAppToast("Stack Underflow! Tumpukan sudah kosong.", "error");
     return;
   }
@@ -197,6 +222,13 @@ export function handleStackPop() {
   document.getElementById("stack-last-op").textContent = `POP('${popped}')`;
   appendTerminalLog(`[POP] Sukses mengeluarkan data teratas '${popped}'. Pointer TOP kini berada di Indeks [${nextTopIndex >= 0 ? nextTopIndex : "KOSONG"}].`, "text-error font-semibold");
 
+  // Real-time Scaffolding Explanation
+  updateRealtimeExplanation(
+    "pop", 
+    popped, 
+    `Operasi POP mengeluarkan data '${popped}' karena posisinya berada di paling atas. Penunjuk TOP kini bergeser turun ke indeks [${nextTopIndex >= 0 ? nextTopIndex : "KOSONG"}].`
+  );
+
   if (window.showAppToast) window.showAppToast(`POP('${popped}') berhasil diambil.`, "info");
 
   renderLabState();
@@ -207,12 +239,23 @@ export function handleStackPeek() {
 
   if (currentCount === 0) {
     appendTerminalLog(`[PEEK] Stack saat ini kosong (NULL). Tidak ada elemen di puncak.`, "text-tertiary-fixed");
+    updateRealtimeExplanation(
+      "underflow", 
+      "", 
+      "Stack kosong, tidak ada elemen di puncak (TOP) yang dapat diintip."
+    );
     if (window.showAppToast) window.showAppToast("Stack kosong, tidak ada elemen puncak.", "warning");
     return;
   }
 
   const topValue = LabEngine.stackData[currentCount - 1];
   appendTerminalLog(`[PEEK] Elemen teratas (TOP) saat ini adalah '${topValue}' pada Indeks [${currentCount - 1}] (Operasi baca tanpa menghapus).`, "text-tertiary-fixed font-bold");
+
+  updateRealtimeExplanation(
+    "peek", 
+    topValue, 
+    `Melihat nilai data '${topValue}' pada posisi TOP (Indeks [${currentCount - 1}]). Kapasitas tumpukan tetap utuh ${currentCount}/${LabEngine.maxCapacity}.`
+  );
 
   // Visual pulse highlight pada top node
   const topNode = document.getElementById("stack-top-node");
@@ -236,6 +279,11 @@ export function handleQueueEnqueue() {
   if (currentCount >= LabEngine.maxCapacity) {
     appendTerminalLog(`[OVERFLOW] Gagal ENQUEUE: Antrean sudah penuh (${currentCount}/${LabEngine.maxCapacity} elemen)! Lakukan DEQUEUE terlebih dahulu.`, "text-error-container font-bold");
     triggerWarningShake("queue-canvas-view");
+    updateRealtimeExplanation(
+      "overflow", 
+      "", 
+      `Antrean sudah mencapai batas maksimal ${LabEngine.maxCapacity} elemen. Layani elemen depan (DEQUEUE) terlebih dahulu.`
+    );
     if (window.showAppToast) window.showAppToast("Queue Overflow! Antrean sudah mencapai batas 5.", "error");
     return;
   }
@@ -248,6 +296,13 @@ export function handleQueueEnqueue() {
   const rearIndex = LabEngine.queueData.length - 1;
 
   appendTerminalLog(`[ENQUEUE] '${value}' masuk antrean di posisi REAR (Indeks [${rearIndex}]). Total antrean: ${LabEngine.queueData.length}/${LabEngine.maxCapacity}.`, "text-secondary-fixed");
+
+  // Real-time Scaffolding Explanation
+  updateRealtimeExplanation(
+    "enqueue", 
+    value, 
+    `Data baru '${value}' masuk di ujung REAR (Indeks [${rearIndex}]). Harus menunggu berurutan sampai seluruh elemen di posisi depan (FRONT) selesai dilayani.`
+  );
 
   if (window.showAppToast) window.showAppToast(`ENQUEUE('${value}') sukses di REAR.`, "success");
 
@@ -262,6 +317,11 @@ export function handleQueueDequeue() {
   if (currentCount === 0) {
     appendTerminalLog(`[UNDERFLOW] Gagal DEQUEUE: Antrean kosong (0 elemen)! Tidak ada orang / paket yang mengantre.`, "text-error-container font-bold");
     triggerWarningShake("queue-canvas-view");
+    updateRealtimeExplanation(
+      "underflow", 
+      "", 
+      "Antrean kosong (0 elemen). Tidak ada data di posisi FRONT yang dapat dikeluarkan."
+    );
     if (window.showAppToast) window.showAppToast("Queue Underflow! Antrean kosong.", "error");
     return;
   }
@@ -270,6 +330,13 @@ export function handleQueueDequeue() {
   const dequeued = LabEngine.queueData.shift();
 
   appendTerminalLog(`[DEQUEUE] Elemen terdepan '${dequeued}' selesai dilayani & keluar dari FRONT (Indeks [0]). Seluruh elemen antrean bergeser maju.`, "text-error font-semibold");
+
+  // Real-time Scaffolding Explanation
+  updateRealtimeExplanation(
+    "dequeue", 
+    dequeued, 
+    `Elemen '${dequeued}' selesai dilayani dan keluar dari ujung FRONT (Indeks 0). Seluruh elemen berikutnya kini bergeser satu indeks maju ke depan.`
+  );
 
   if (window.showAppToast) window.showAppToast(`DEQUEUE('${dequeued}') keluar dari FRONT.`, "info");
 
@@ -281,6 +348,11 @@ export function handleQueueFrontRearCheck() {
 
   if (currentCount === 0) {
     appendTerminalLog(`[CHECK] Antrean kosong (FRONT = NULL, REAR = NULL).`, "text-tertiary-fixed");
+    updateRealtimeExplanation(
+      "underflow", 
+      "", 
+      "Antrean sedang kosong (FRONT = NULL, REAR = NULL)."
+    );
     return;
   }
 
@@ -289,6 +361,12 @@ export function handleQueueFrontRearCheck() {
 
   appendTerminalLog(`[CHECK] Posisi Antrean: FRONT (Indeks 0) = '${frontVal}' | REAR (Indeks ${currentCount - 1}) = '${rearVal}'.`, "text-tertiary-fixed font-bold");
 
+  updateRealtimeExplanation(
+    "queue-check", 
+    frontVal, 
+    rearVal
+  );
+
   if (window.showAppToast) window.showAppToast(`FRONT: "${frontVal}" | REAR: "${rearVal}"`, "info");
 }
 
@@ -296,7 +374,8 @@ export function handleQueueFrontRearCheck() {
  * 5. RESET DATA STRUKTUR
  */
 export function handleResetStructure() {
-  if (LabEngine.currentMode === "stack") {
+  const isStack = LabEngine.currentMode === "stack";
+  if (isStack) {
     LabEngine.stackData = [];
     document.getElementById("stack-last-op").textContent = "RESET()";
     appendTerminalLog("[RESET] Wadah Stack dikosongkan total (0 elemen aktif). Memori bersih.", "text-on-primary-container");
@@ -306,7 +385,130 @@ export function handleResetStructure() {
     appendTerminalLog("[RESET] Lintasan Antrean Queue dikosongkan total (0 elemen aktif).", "text-on-primary-container");
     if (window.showAppToast) window.showAppToast("Lintasan Queue berhasil di-reset.", "info");
   }
+
+  updateRealtimeExplanation(
+    "reset", 
+    isStack ? "Stack (Tumpukan LIFO)" : "Queue (Antrean FIFO)", 
+    "Seluruh alokasi slot memori virtual telah dibersihkan kembali ke ukuran 0/5."
+  );
+
   renderLabState();
+}
+
+/**
+ * Update Panel Penjelasan Logika Real-Time (Scaffolding Konseptual)
+ * Memberikan bimbingan penjelasan konsep eksplisit bagi siswa SMA
+ */
+export function updateRealtimeExplanation(operation, elementName, detail = "") {
+  const panel = document.getElementById("scaffolding-explanation-panel");
+  const badge = document.getElementById("explanation-op-badge");
+  const textEl = document.getElementById("explanation-text");
+  const detailEl = document.getElementById("explanation-detail");
+  const iconEl = document.getElementById("explanation-icon");
+
+  if (!textEl || !detailEl) return;
+
+  let mainText = "";
+  let badgeText = "";
+  let badgeClass = "font-label-md text-[10px] sm:text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider ";
+  let iconName = "info";
+
+  switch (operation) {
+    case "push":
+      mainText = `Elemen [${elementName}] ditambahkan ke atas tumpukan (Stack - LIFO).`;
+      badgeText = "PUSH BERHASIL";
+      badgeClass += "bg-secondary-container text-on-secondary-container";
+      iconName = "vertical_align_bottom";
+      break;
+
+    case "pop":
+      mainText = `Elemen [${elementName}] dikeluarkan dari atas tumpukan karena menerapkan prinsip Last-In, First-Out (LIFO).`;
+      badgeText = "POP SELESAI";
+      badgeClass += "bg-error-container text-on-error-container";
+      iconName = "vertical_align_top";
+      break;
+
+    case "peek":
+      mainText = `Melihat elemen [${elementName}] di posisi puncak tanpa menghapusnya (Operasi PEEK).`;
+      badgeText = "PEEK TOP ELEMEN";
+      badgeClass += "bg-tertiary-fixed text-on-tertiary-fixed";
+      iconName = "visibility";
+      break;
+
+    case "enqueue":
+      mainText = `Elemen [${elementName}] masuk dari belakang antrean (Queue - FIFO).`;
+      badgeText = "ENQUEUE REAR";
+      badgeClass += "bg-secondary-container text-on-secondary-container";
+      iconName = "login";
+      break;
+
+    case "dequeue":
+      mainText = `Elemen [${elementName}] dikeluarkan dari depan antrean karena menerapkan prinsip First-In, First-Out (FIFO).`;
+      badgeText = "DEQUEUE FRONT";
+      badgeClass += "bg-error-container text-on-error-container";
+      iconName = "logout";
+      break;
+
+    case "queue-check":
+      mainText = `Memeriksa status antrean: FRONT = [${elementName}], REAR = [${detail}].`;
+      badgeText = "INSPEKSI ANTREAN";
+      badgeClass += "bg-tertiary-fixed text-on-tertiary-fixed";
+      iconName = "sync_alt";
+      detail = "FRONT siap diproses keluar berikutnya, sedangkan REAR menunjukkan data yang paling terakhir tiba.";
+      break;
+
+    case "overflow":
+      mainText = `Peringatan [OVERFLOW]: Kapasitas memori penuh (Maksimal ${LabEngine.maxCapacity} elemen)!`;
+      badgeText = "OVERFLOW DETECTED";
+      badgeClass += "bg-error text-on-error";
+      iconName = "warning";
+      break;
+
+    case "underflow":
+      mainText = `Peringatan [UNDERFLOW]: Wadah kosong (0 elemen). Tidak ada data untuk dikeluarkan!`;
+      badgeText = "UNDERFLOW DETECTED";
+      badgeClass += "bg-error text-on-error";
+      iconName = "block";
+      break;
+
+    case "reset":
+      mainText = `Wadah ${elementName} telah dikosongkan total kembali ke kondisi awal (Size: 0/${LabEngine.maxCapacity}).`;
+      badgeText = "RESET SELESAI";
+      badgeClass += "bg-surface-container-high text-on-surface";
+      iconName = "restart_alt";
+      break;
+
+    case "switch":
+      mainText = elementName === "stack"
+        ? "Beralih ke mode Stack: Prinsip LIFO (Last In, First Out) aktif dengan penunjuk TOP."
+        : "Beralih ke mode Queue: Prinsip FIFO (First In, First Out) aktif dengan penunjuk FRONT & REAR.";
+      badgeText = elementName === "stack" ? "MODE STACK (LIFO)" : "MODE QUEUE (FIFO)";
+      badgeClass += elementName === "stack" ? "bg-primary text-on-primary" : "bg-tertiary-fixed text-on-tertiary-fixed";
+      iconName = elementName === "stack" ? "layers" : "queue";
+      break;
+
+    default:
+      mainText = detail;
+      badgeText = "STATUS SISTEM";
+      badgeClass += "bg-surface-container text-on-surface";
+  }
+
+  textEl.textContent = mainText;
+  detailEl.textContent = detail;
+  if (badge) {
+    badge.textContent = badgeText;
+    badge.className = badgeClass;
+  }
+  if (iconEl) {
+    iconEl.textContent = iconName;
+  }
+
+  // Trigger brief highlight animation
+  if (panel) {
+    panel.classList.remove("explanation-highlight");
+    void panel.offsetWidth; // trigger reflow
+    panel.classList.add("explanation-highlight");
+  }
 }
 
 /**

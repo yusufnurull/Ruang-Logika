@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>Kuis Evaluasi — Ruang Logika | Uji Pemahaman Stack & Queue</title>
-  <meta name="description" content="Evaluasi Formatif Interaktif Struktur Data Linear (Stack & Queue) dengan Penilaian Otomatis dan Sinkronisasi Cloud Firestore. Pengembang: Yusuf Nurul Huda."/>
-  <meta property="og:title" content="Kuis Evaluasi — Ruang Logika | Uji Pemahaman Stack & Queue"/>
+  <title>Kuis Evaluasi — Ruang Logika | Uji Pemahaman Stack &amp; Queue</title>
+  <meta name="description" content="Evaluasi Formatif Interaktif Struktur Data Linear (Stack LIFO &amp; Queue FIFO) dengan Penilaian Otomatis dan Sinkronisasi Cloud Firestore. Pengembang: Yusuf Nurul Huda."/>
+  <meta property="og:title" content="Kuis Evaluasi — Ruang Logika | Uji Pemahaman Stack &amp; Queue"/>
   <meta property="og:description" content="Evaluasi Formatif Interaktif Struktur Data Linear SMA. Pengembang: Yusuf Nurul Huda."/>
   <meta property="og:type" content="website"/>
 
@@ -78,19 +78,22 @@
     };
   </script>
 </head>
-<body class="bg-surface font-body-md text-on-surface antialiased">
+<body class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col">
   
   <!-- Fixed Top Header (Google Stitch Navbar) -->
   <header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl border-b border-outline-variant/40">
     <div class="h-16 w-[95vw] mx-auto px-2 sm:px-4 flex items-center justify-between gap-3 sm:gap-4">
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2.5">
+        <button id="btn-mobile-nav-toggle" type="button" aria-label="Buka Menu Navigasi" class="xl:hidden p-1.5 -ml-1 rounded-xl text-primary hover:bg-surface-container-high transition cursor-pointer flex items-center justify-center">
+          <span class="material-symbols-outlined text-2xl">menu</span>
+        </button>
         <a class="flex items-center gap-2.5" href="index.html">
           <div class="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center text-on-secondary shadow-sm">
             <span class="material-symbols-outlined text-xl">account_tree</span>
           </div>
           <div class="flex flex-col">
             <span class="font-headline-md text-lg font-bold tracking-tight text-primary leading-none">Ruang Logika</span>
-            <span class="font-label-md text-[11px] text-on-surface-variant leading-none mt-1">Kelas X SMA</span>
+            <span class="font-label-md text-[11px] text-secondary font-semibold leading-none mt-1">Uji Kompetensi</span>
           </div>
         </a>
       </div>
@@ -105,24 +108,15 @@
       </nav>
 
       <div class="flex items-center gap-2 sm:gap-3">
-        <div class="relative">
-          <select id="modeSelector" class="font-body-sm text-xs bg-surface-container-lowest text-on-surface border border-outline-variant rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-secondary cursor-pointer shadow-sm">
-            <option value="siswa" selected>Mode Siswa</option>
-            <option value="guru">Mode Guru</option>
-            <option value="admin">Mode Admin</option>
-            <option value="auth">Login / Register</option>
-          </select>
-        </div>
-
         <div class="hidden sm:flex items-center gap-1.5 bg-surface-container px-2.5 py-1 rounded-full border border-outline-variant/60">
           <span class="material-symbols-outlined text-secondary text-base">verified</span>
           <span class="font-label-md text-xs text-on-surface font-semibold user-display-xp">Level 4 • 850 XP</span>
         </div>
 
         <div id="header-auth-container" class="flex items-center">
-          <a href="login.html" class="flex items-center gap-1.5 px-3 py-1.5 bg-secondary text-on-secondary rounded-lg font-headline-md text-xs font-bold hover:bg-secondary/90 shadow-sm transition">
-            <span class="material-symbols-outlined text-sm">login</span>
-            <span>Masuk / Daftar</span>
+          <a href="dashboard-siswa.html" class="flex items-center gap-1.5 px-3 py-1.5 bg-secondary text-on-secondary rounded-lg font-headline-md text-xs font-bold hover:bg-secondary/90 shadow-sm transition">
+            <span class="material-symbols-outlined text-sm">dashboard</span>
+            <span>Dashboard Siswa</span>
           </a>
         </div>
       </div>
@@ -130,206 +124,215 @@
   </header>
 
   <!-- Main Fluid Workspace (95vw) -->
-  <main class="w-full pt-16 bg-surface min-h-[calc(100vh-16rem)]">
-    <div class="flex flex-col w-full">
-      <div class="w-[95vw] mx-auto py-4 flex flex-col gap-4">
-        
-        <!-- Header Banner Card (Stitch Style) -->
-        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-surface-container-lowest p-4 sm:p-5 rounded-xl shadow-sm border border-outline-variant/20">
-          <div class="flex flex-col">
-            <div class="flex items-center gap-2">
-              <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-tertiary-fixed-dim text-on-tertiary-fixed">
-                <span class="material-symbols-outlined text-base">task_alt</span>
-              </span>
-              <span class="font-label-md text-xs uppercase tracking-wider text-secondary font-bold">Evaluasi Formatif Komprehensif</span>
+  <main class="w-full pt-20 pb-12 bg-surface flex-1">
+    <div class="w-[95vw] mx-auto flex flex-col gap-6">
+      
+      <!-- Header Banner Card (Stitch Style) -->
+      <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-surface-container-lowest p-5 sm:p-6 rounded-2xl shadow-sm border border-outline-variant/30">
+        <div class="flex flex-col">
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-tertiary-fixed-dim text-on-tertiary-fixed">
+              <span class="material-symbols-outlined text-base">task_alt</span>
+            </span>
+            <span class="font-label-md text-xs uppercase tracking-wider text-secondary font-bold">Evaluasi Berpikir Komputasional</span>
+          </div>
+          <h1 class="font-headline-xl text-xl sm:text-2xl text-primary tracking-tight mt-1 font-bold">
+            Uji Kompetensi: Struktur Data Linear (Stack &amp; Queue)
+          </h1>
+          <p id="quiz-user-greeting" class="font-body-sm text-xs sm:text-sm text-on-surface-variant max-w-2xl mt-0.5">
+            Memuat identitas peserta evaluasi kuis...
+          </p>
+        </div>
+
+        <!-- Quick Metrics Bar -->
+        <div class="flex items-center gap-3 shrink-0">
+          <div class="flex items-center gap-2.5 bg-surface-container-low px-3.5 py-2 rounded-xl border border-outline-variant/40">
+            <span class="material-symbols-outlined text-tertiary-fixed-dim text-xl">timer</span>
+            <div class="flex flex-col">
+              <span class="font-label-md text-[10px] text-on-surface-variant uppercase leading-none">Waktu Berjalan</span>
+              <span id="quiz-timer-display" class="font-code-block text-sm sm:text-base font-bold text-primary leading-tight">00:00</span>
             </div>
-            <h1 class="font-headline-xl text-xl sm:text-2xl text-primary tracking-tight mt-1 font-bold">
-              Uji Kompetensi: Struktur Data Linear (Stack &amp; Queue)
-            </h1>
-            <p id="quiz-user-greeting" class="font-body-sm text-xs sm:text-sm text-on-surface-variant">
-              Memuat profil peserta evaluasi kuis...
-            </p>
           </div>
 
-          <!-- Quick Metrics Bar -->
-          <div class="flex items-center gap-2 sm:gap-3">
-            <div class="flex items-center gap-2 bg-surface-container-low px-3 py-2 rounded-xl border border-outline-variant/40">
-              <span class="material-symbols-outlined text-tertiary-fixed-dim text-lg">timer</span>
-              <div class="flex flex-col">
-                <span class="font-label-md text-[10px] text-on-surface-variant uppercase leading-none">Waktu</span>
-                <span id="quiz-timer-display" class="font-code-block text-xs sm:text-sm font-bold text-primary leading-tight">00:00</span>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-2 bg-surface-container-low px-3 py-2 rounded-xl border border-outline-variant/40">
-              <span class="material-symbols-outlined text-secondary text-lg">cloud_sync</span>
-              <div class="flex flex-col">
-                <span class="font-label-md text-[10px] text-on-surface-variant uppercase leading-none">Sinkronisasi</span>
-                <span class="font-label-md text-xs font-bold text-secondary leading-tight">Firestore Sync</span>
-              </div>
+          <div class="flex items-center gap-2.5 bg-surface-container-low px-3.5 py-2 rounded-xl border border-outline-variant/40">
+            <span class="material-symbols-outlined text-secondary text-xl">cloud_sync</span>
+            <div class="flex flex-col">
+              <span class="font-label-md text-[10px] text-on-surface-variant uppercase leading-none">Database</span>
+              <span class="font-label-md text-xs font-bold text-secondary leading-tight">Firestore Cloud</span>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- ACTIVE QUIZ PANEL -->
-        <div id="quiz-active-panel" class="w-full flex flex-col gap-4">
+      <!-- ACTIVE QUIZ PANEL -->
+      <div id="quiz-active-panel" class="w-full flex flex-col gap-5">
 
-          <!-- Top Progress Tracker & Number Pills (Stitch Style) -->
-          <div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant/30 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="w-full sm:w-1/3 flex flex-col gap-1.5">
-              <div class="flex items-center justify-between">
-                <span id="quiz-progress-text" class="font-label-md text-xs font-bold text-primary">Soal 1 dari 5</span>
-                <span class="font-label-md text-[11px] text-secondary font-semibold">Bobot: 20 XP / Soal</span>
-              </div>
-              <div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
-                <div id="quiz-progress-bar" class="h-full bg-secondary transition-all duration-300 w-1/5"></div>
-              </div>
+        <!-- Top Progress Tracker & Number Pills -->
+        <div class="bg-surface-container-lowest rounded-2xl p-4 sm:p-5 shadow-sm border border-outline-variant/30 flex flex-col lg:flex-row items-center justify-between gap-4">
+          <div class="w-full lg:w-1/3 flex flex-col gap-1.5">
+            <div class="flex items-center justify-between">
+              <span id="quiz-progress-text" class="font-headline-md text-xs font-bold text-primary">Soal 1 dari 8</span>
+              <span class="font-label-md text-[11px] text-secondary font-semibold">KKM Kelulusan: &ge; 75</span>
             </div>
-
-            <!-- Number Pills (1 to 5) -->
-            <div id="quiz-number-pills" class="flex items-center gap-2">
-              <!-- Dynamically populated by js/quiz.js -->
+            <div class="w-full h-2.5 bg-surface-container rounded-full overflow-hidden">
+              <div id="quiz-progress-bar" class="h-full bg-secondary transition-all duration-300 w-1/8"></div>
             </div>
           </div>
 
-          <!-- Main Question Card (Stitch Style) -->
-          <div id="quiz-card" class="bg-surface-container-lowest rounded-xl p-5 sm:p-8 shadow-sm border border-outline-variant/30 flex flex-col gap-5">
-            
-            <!-- Category Tag & Question Indicator -->
-            <div class="flex items-center justify-between pb-3 border-b border-outline-variant/30">
-              <div class="flex items-center gap-2">
-                <span id="quiz-question-number" class="w-7 h-7 rounded-lg bg-primary text-tertiary-fixed-dim font-code-block font-bold text-xs flex items-center justify-center">01</span>
-                <span id="quiz-question-topic" class="font-label-md text-xs font-bold uppercase tracking-wider text-secondary">Konsep Dasar Stack</span>
-              </div>
-              <span class="font-label-md text-xs text-on-surface-variant flex items-center gap-1">
-                <span class="material-symbols-outlined text-sm text-tertiary-fixed-dim">verified</span>
-                Pilihan Ganda
-              </span>
-            </div>
-
-            <!-- Question Text -->
-            <div class="py-1">
-              <h2 id="quiz-question-text" class="font-headline-lg text-base sm:text-lg lg:text-xl font-bold text-primary leading-relaxed">
-                Memuat pertanyaan kuis...
-              </h2>
-            </div>
-
-            <!-- Options Container -->
-            <div id="quiz-options-container" class="flex flex-col gap-2.5 my-2">
-              <!-- Rendered dynamically by js/quiz.js -->
-            </div>
-
-            <!-- Footer Buttons -->
-            <div class="flex items-center justify-between pt-4 border-t border-outline-variant/30">
-              <button id="btn-prev-question" type="button" class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-surface-container-high text-on-surface font-headline-md text-xs sm:text-sm font-semibold hover:bg-surface-container-highest transition">
-                <span class="material-symbols-outlined text-base">arrow_back</span>
-                <span>Sebelumnya</span>
-              </button>
-
-              <div class="flex items-center gap-2">
-                <button id="btn-next-question" type="button" class="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-primary text-on-primary font-headline-md text-xs sm:text-sm font-semibold hover:bg-primary/90 transition shadow-sm">
-                  <span>Selanjutnya</span>
-                  <span class="material-symbols-outlined text-base">arrow_forward</span>
-                </button>
-
-                <button id="btn-finish-quiz" type="button" class="hidden flex items-center gap-1.5 px-6 py-2 rounded-lg bg-secondary text-on-secondary font-headline-md text-xs sm:text-sm font-bold hover:bg-secondary/90 transition shadow-md">
-                  <span class="material-symbols-outlined text-base">check_circle</span>
-                  <span>Selesaikan Kuis</span>
-                </button>
-              </div>
-            </div>
-
+          <!-- Number Pills (1 sampai 8) -->
+          <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-center" id="quiz-number-pills">
+            <!-- Populated by js/quiz.js -->
           </div>
-
         </div>
 
-        <!-- RESULT & EVALUATION PANEL (Initially Hidden) -->
-        <div id="quiz-result-panel" class="hidden w-full flex flex-col gap-4">
+        <!-- Main Question Card (Stitch Style) -->
+        <div id="quiz-card" class="bg-surface-container-lowest rounded-2xl p-6 sm:p-8 shadow-sm border border-outline-variant/30 flex flex-col gap-6">
           
-          <!-- Score Banner Hero (Stitch Primary-Container Palette) -->
-          <div class="bg-primary-container text-on-primary-container rounded-xl p-6 sm:p-10 shadow-sm border border-outline-variant/30 flex flex-col items-center text-center gap-4 relative overflow-hidden">
-            <div id="result-score-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-md text-xs font-bold uppercase tracking-wider">
-              <span class="material-symbols-outlined text-sm">verified</span> Evaluasi Selesai
+          <!-- Category Tag & Question Indicator -->
+          <div class="flex items-center justify-between pb-3 border-b border-outline-variant/30">
+            <div class="flex items-center gap-2.5">
+              <span id="quiz-question-number" class="w-8 h-8 rounded-xl bg-primary text-tertiary-fixed-dim font-code-block font-bold text-xs flex items-center justify-center">01</span>
+              <span id="quiz-question-topic" class="font-label-md text-xs font-bold uppercase tracking-wider text-secondary">Karakteristik Mekanis Stack</span>
             </div>
-
-            <h2 class="font-headline-xl text-2xl sm:text-3xl font-bold text-white tracking-tight">
-              Laporan Hasil Evaluasi Mandiri
-            </h2>
-            <p id="result-score-message" class="font-body-md text-xs sm:text-sm text-on-primary-container max-w-xl leading-relaxed">
-              Menghitung capaian pemahaman konsep struktur data linear...
-            </p>
-
-            <!-- Score Circle -->
-            <div class="py-2">
-              <div class="inline-flex flex-col items-center justify-center w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-surface-container-lowest/10 border-4 border-secondary shadow-lg">
-                <span id="result-score-number" class="font-code-block text-4xl sm:text-5xl font-black text-tertiary-fixed-dim">100</span>
-                <span class="font-label-md text-[10px] uppercase tracking-widest text-on-primary-container mt-1">Skor Akhir</span>
-              </div>
-            </div>
-
-            <!-- Stats Row -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-lg">
-              <div class="p-3 rounded-lg bg-surface-container-lowest/10 border border-white/10 flex flex-col items-center">
-                <span class="font-label-md text-[10px] text-on-primary-container uppercase">Jawaban Benar</span>
-                <span id="result-correct-count" class="font-code-block text-lg font-bold text-secondary mt-0.5">5 Soal</span>
-              </div>
-              <div class="p-3 rounded-lg bg-surface-container-lowest/10 border border-white/10 flex flex-col items-center">
-                <span class="font-label-md text-[10px] text-on-primary-container uppercase">Jawaban Salah</span>
-                <span id="result-wrong-count" class="font-code-block text-lg font-bold text-error mt-0.5">0 Soal</span>
-              </div>
-              <div class="p-3 rounded-lg bg-surface-container-lowest/10 border border-white/10 flex flex-col items-center">
-                <span class="font-label-md text-[10px] text-on-primary-container uppercase">Waktu Selesai</span>
-                <span id="result-time-spent" class="font-code-block text-lg font-bold text-tertiary-fixed-dim mt-0.5">01m 30s</span>
-              </div>
-            </div>
-
-            <!-- Firestore Synchronization Status -->
-            <div id="quiz-save-status" class="pt-1">
-              <!-- Populated by js/quiz.js -->
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="flex flex-wrap items-center justify-center gap-2.5 pt-2">
-              <button id="btn-restart-quiz" type="button" class="flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-surface-container-high text-primary font-headline-md text-xs sm:text-sm font-semibold hover:bg-surface-container-highest transition">
-                <span class="material-symbols-outlined text-base">replay</span>
-                <span>Ulangi Kuis</span>
-              </button>
-              <a href="laboratorium.html" class="flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-secondary text-on-secondary font-headline-md text-xs sm:text-sm font-bold shadow hover:bg-secondary/90 transition">
-                <span class="material-symbols-outlined text-base">science</span>
-                <span>Eksplorasi di Lab</span>
-              </a>
-              <a href="dashboard-siswa.html" class="flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-tertiary-fixed-dim text-on-tertiary-fixed font-headline-md text-xs sm:text-sm font-bold shadow hover:brightness-105 transition">
-                <span class="material-symbols-outlined text-base">dashboard</span>
-                <span>Buka Dashboard</span>
-              </a>
-            </div>
+            <span class="font-label-md text-xs text-on-surface-variant flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm text-tertiary-fixed-dim">format_list_bulleted</span>
+              Pilihan Ganda (Opsi A &ndash; E)
+            </span>
           </div>
 
-          <!-- Detailed Answer Breakdown -->
-          <div class="bg-surface-container-lowest rounded-xl p-5 sm:p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-4">
-            <div class="flex items-center justify-between pb-3 border-b border-outline-variant/30">
-              <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-secondary text-xl">analytics</span>
-                <h3 class="font-headline-md text-sm sm:text-base font-bold text-primary">
-                  Review &amp; Pembahasan Setiap Butir Soal
-                </h3>
-              </div>
-              <span class="font-label-md text-xs text-on-surface-variant">Analisis Pedagogis</span>
-            </div>
+          <!-- Question Text -->
+          <div>
+            <h2 id="quiz-question-text" class="font-headline-lg text-base sm:text-lg lg:text-xl font-bold text-primary leading-relaxed">
+              Memuat butir pertanyaan evaluasi...
+            </h2>
+          </div>
 
-            <div id="quiz-review-container" class="flex flex-col gap-3">
-              <!-- Dynamically populated by js/quiz.js -->
+          <!-- Options Container (Opsi A, B, C, D, E) -->
+          <div id="quiz-options-container" class="flex flex-col gap-3 my-1">
+            <!-- Rendered dynamically by js/quiz.js -->
+          </div>
+
+          <!-- Footer Buttons -->
+          <div class="flex items-center justify-between pt-4 border-t border-outline-variant/30">
+            <button id="btn-prev-question" type="button" class="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-surface-container-high text-on-surface font-headline-md text-xs sm:text-sm font-semibold hover:bg-surface-container-highest transition cursor-pointer">
+              <span class="material-symbols-outlined text-base">arrow_back</span>
+              <span>Soal Sebelumnya</span>
+            </button>
+
+            <div class="flex items-center gap-2.5">
+              <button id="btn-next-question" type="button" class="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-primary text-on-primary font-headline-md text-xs sm:text-sm font-bold hover:bg-primary/90 transition shadow-sm cursor-pointer">
+                <span>Soal Selanjutnya</span>
+                <span class="material-symbols-outlined text-base">arrow_forward</span>
+              </button>
+
+              <button id="btn-finish-quiz" type="button" class="hidden flex items-center gap-1.5 px-6 py-2.5 rounded-xl bg-secondary text-on-secondary font-headline-md text-xs sm:text-sm font-bold hover:bg-secondary/90 transition shadow-md cursor-pointer">
+                <span class="material-symbols-outlined text-base">check_circle</span>
+                <span>Selesai &amp; Kirim Jawaban</span>
+              </button>
             </div>
           </div>
 
         </div>
 
       </div>
+
+      <!-- RESULT & EVALUATION PANEL (Awalnya Tersembunyi) -->
+      <div id="quiz-result-panel" class="hidden w-full flex flex-col gap-6">
+        
+        <!-- Score Banner Hero (Stitch Primary-Container Palette) -->
+        <div class="bg-primary-container text-on-primary-container rounded-2xl p-6 sm:p-10 shadow-md border border-outline-variant/30 flex flex-col items-center text-center gap-4 relative overflow-hidden">
+          
+          <!-- Result Badge (Kompeten vs Perlu Remediasi) -->
+          <div id="result-score-badge" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-secondary text-on-secondary font-headline-md text-xs font-bold uppercase tracking-wider shadow-sm">
+            <span class="material-symbols-outlined text-base">verified</span> Kategori: Kompeten (Tuntas)
+          </div>
+
+          <h2 class="font-headline-xl text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            Ringkasan Hasil Evaluasi Mandiri
+          </h2>
+          
+          <p id="result-score-message" class="font-body-md text-xs sm:text-sm text-on-primary-container max-w-xl leading-relaxed">
+            Menghitung perolehan skor akhir dan status kelulusan KKM...
+          </p>
+
+          <!-- Perolehan XP Reward Badge -->
+          <div id="result-xp-reward-badge" class="my-1">
+            <!-- Populated by js/quiz.js -->
+          </div>
+
+          <!-- Score Circle -->
+          <div class="py-2">
+            <div class="inline-flex flex-col items-center justify-center w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-surface-container-lowest/10 border-4 border-secondary shadow-xl">
+              <span id="result-score-number" class="font-code-block text-4xl sm:text-5xl font-black text-tertiary-fixed-dim">100</span>
+              <span class="font-label-md text-[10px] uppercase tracking-widest text-on-primary-container mt-1">Skor Akhir (100)</span>
+            </div>
+          </div>
+
+          <!-- Stats Row -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-xl">
+            <div class="p-3.5 rounded-xl bg-surface-container-lowest/10 border border-white/10 flex flex-col items-center">
+              <span class="font-label-md text-[10px] text-on-primary-container uppercase">Jawaban Benar</span>
+              <span id="result-correct-count" class="font-code-block text-lg font-bold text-secondary mt-0.5">8 Soal</span>
+            </div>
+            <div class="p-3.5 rounded-xl bg-surface-container-lowest/10 border border-white/10 flex flex-col items-center">
+              <span class="font-label-md text-[10px] text-on-primary-container uppercase">Jawaban Salah</span>
+              <span id="result-wrong-count" class="font-code-block text-lg font-bold text-rose-300 mt-0.5">0 Soal</span>
+            </div>
+            <div class="p-3.5 rounded-xl bg-surface-container-lowest/10 border border-white/10 flex flex-col items-center">
+              <span class="font-label-md text-[10px] text-on-primary-container uppercase">Durasi Pengerjaan</span>
+              <span id="result-time-spent" class="font-code-block text-lg font-bold text-tertiary-fixed-dim mt-0.5">02m 15s</span>
+            </div>
+          </div>
+
+          <!-- Cloud Firestore Synchronization Status -->
+          <div id="quiz-save-status" class="pt-2">
+            <!-- Populated by js/quiz.js -->
+          </div>
+
+          <!-- Action Buttons: Ulangi Kuis & Lihat Dashboard -->
+          <div class="flex flex-wrap items-center justify-center gap-3 pt-3">
+            <button id="btn-restart-quiz" type="button" class="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-surface-container-high text-primary font-headline-md text-xs sm:text-sm font-bold hover:bg-surface-container-highest transition cursor-pointer">
+              <span class="material-symbols-outlined text-base">replay</span>
+              <span>Ulangi Kuis</span>
+            </button>
+            <a href="dashboard-siswa.html" class="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-tertiary-fixed-dim text-on-tertiary-fixed font-headline-md text-xs sm:text-sm font-bold shadow hover:brightness-105 transition">
+              <span class="material-symbols-outlined text-base">dashboard</span>
+              <span>Lihat Dashboard</span>
+            </a>
+            <a href="laboratorium.html" class="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-secondary text-on-secondary font-headline-md text-xs sm:text-sm font-bold shadow hover:bg-secondary/90 transition">
+              <span class="material-symbols-outlined text-base">science</span>
+              <span>Eksplorasi di Lab</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Detailed Review & Explanation Breakdown -->
+        <div class="bg-surface-container-lowest rounded-2xl p-6 sm:p-7 shadow-sm border border-outline-variant/30 flex flex-col gap-5">
+          <div class="flex items-center justify-between pb-3 border-b border-outline-variant/30">
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-secondary text-2xl">analytics</span>
+              <div>
+                <h3 class="font-headline-md text-base sm:text-lg font-bold text-primary">
+                  Review &amp; Pembahasan Singkat Setiap Nomor
+                </h3>
+                <p class="font-body-sm text-xs text-on-surface-variant">Analisis komparatif jawaban siswa terhadap kunci jawaban dan konsep algoritma yang mendasarinya.</p>
+              </div>
+            </div>
+            <span class="font-label-md text-xs text-secondary font-semibold bg-secondary-container/40 px-2.5 py-1 rounded-full">Pedagogi LIFO &amp; FIFO</span>
+          </div>
+
+          <div id="quiz-review-container" class="flex flex-col gap-4">
+            <!-- Dynamically populated by js/quiz.js -->
+          </div>
+        </div>
+
+      </div>
+
     </div>
   </main>
 
   <!-- Google Stitch Footer -->
-  <footer class="w-full bg-surface-container-lowest border-t border-outline-variant/40 mt-8 py-8 transition-colors">
+  <footer class="w-full bg-surface-container-lowest border-t border-outline-variant/40 py-8 transition-colors mt-auto">
     <div class="w-[95vw] mx-auto px-2 sm:px-4 flex flex-col gap-6">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         
@@ -345,35 +348,35 @@
           </p>
           <div class="flex items-center gap-2 mt-1">
             <span class="font-label-md text-[11px] px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-semibold">
-              Edisi Siswa SMA Kelas X
+              Media Interaktif Algoritma
             </span>
           </div>
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <span class="font-headline-md text-sm font-semibold text-on-surface mb-1">Navigasi Cepat</span>
+          <span class="font-headline-md text-sm font-semibold text-on-surface mb-1">Navigasi Pembelajaran</span>
           <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="index.html">Beranda</a>
           <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="peta-belajar.html">Peta Belajar</a>
           <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="materi.html">Materi Pembelajaran</a>
           <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="laboratorium.html">Laboratorium Virtual</a>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="tantangan.html">Studi Kasus</a>
-          <a class="font-body-sm text-xs text-secondary font-bold" href="kuis.html">Uji Kompetensi</a>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="tantangan.html">Tantangan Kasus</a>
+          <a class="font-body-sm text-xs text-secondary font-bold" href="kuis.html">Kuis &amp; Evaluasi</a>
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <span class="font-headline-md text-sm font-semibold text-on-surface mb-1">Fasilitas &amp; Peran</span>
+          <span class="font-headline-md text-sm font-semibold text-on-surface mb-1">Akses Portal Peran</span>
           <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="dashboard-siswa.html">Dashboard Siswa</a>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="dashboard-guru.html">Pemantauan Guru</a>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="dashboard-admin.html">Tata Kelola Admin</a>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="dashboard-guru.html">Dashboard Guru</a>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="dashboard-admin.html">Dashboard Admin</a>
           <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="login.html">Portal Akses Akun</a>
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <span class="font-headline-md text-sm font-semibold text-on-surface mb-1">Pengembang &amp; Hak Cipta</span>
-          <div class="p-3 rounded-lg bg-surface-container border border-outline-variant/60 flex flex-col gap-1">
+          <span class="font-headline-md text-sm font-semibold text-on-surface mb-1">Pengembang &amp; Sistem</span>
+          <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/60 flex flex-col gap-1">
             <span class="font-label-md text-[11px] text-on-surface-variant">Penanggung Jawab Sistem:</span>
             <span class="font-headline-md text-xs font-bold text-primary">Pengembang: Yusuf Nurul Huda</span>
-            <span class="font-body-sm text-[11px] text-on-surface-variant mt-0.5">Spesialisasi Kurikulum Informatika SMA &amp; Media Interaktif Algoritma.</span>
+            <span class="font-body-sm text-[11px] text-on-surface-variant mt-0.5">Spesialisasi Media Interaktif Struktur Data &amp; Pembelajaran Algoritma SMA.</span>
           </div>
         </div>
 
@@ -381,10 +384,10 @@
 
       <div class="border-t border-outline-variant/40 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2">
         <p class="font-body-sm text-xs text-on-surface-variant text-center sm:text-left">
-          &copy; 2025 Ruang Logika. Hak Cipta Dilindungi Undang-Undang. Pengembang: Yusuf Nurul Huda
+          &copy; 2025 Ruang Logika. Hak Cipta Dilindungi. Pengembang: Yusuf Nurul Huda
         </p>
         <div class="flex items-center gap-4">
-          <span class="font-label-md text-xs text-on-surface-variant font-medium">SMA Kelas X &bull; Informatika</span>
+          <span class="font-label-md text-xs text-on-surface-variant font-medium">Struktur Data Linear (Stack &amp; Queue)</span>
         </div>
       </div>
     </div>

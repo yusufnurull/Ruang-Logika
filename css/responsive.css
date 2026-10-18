@@ -4,6 +4,23 @@
    Pengembang: Yusuf Nurul Huda
    ========================================================================== */
 
+/* Sembunyikan Navigasi Desktop Panjang pada Layar Mobile/Tablet (< 1280px) */
+@media (max-width: 1279px) {
+  header nav:not(.mobile-drawer-nav) {
+    display: none !important;
+  }
+
+  #btn-mobile-nav-toggle {
+    display: inline-flex !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  #btn-mobile-nav-toggle {
+    display: none !important;
+  }
+}
+
 /* Tablet & Mobile Breakpoints */
 @media (max-width: 1024px) {
   .nav-container {

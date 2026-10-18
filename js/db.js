@@ -46,17 +46,40 @@ const DEMO_USERS_LIST = [
 // 1. OPERASI CRUD FIRESTORE DASAR
 // ==========================================================================
 
+export function getCurrentUser() {
+  const user = auth ? auth.currentUser : null;
+  const localUserStr = localStorage.getItem("ruanglogika_user") || localStorage.getItem("ruanglogika_auth_user");
+  const localUser = localUserStr ? JSON.parse(localUserStr) : null;
+
+  if (user) {
+    return {
+      uid: user.uid,
+      namaLengkap: user.displayName || localUser?.namaLengkap || "Siswa Ruang Logika",
+      email: user.email || localUser?.email || "siswa@ruanglogika.id",
+      role: localUser?.role || "siswa"
+    };
+  }
+
+  if (localUser) {
+    return localUser;
+  }
+
+  return {
+    uid: "siswa_demo",
+    namaLengkap: "Farhan Ardiansyah",
+    email: "farhan@student.id",
+    role: "siswa"
+  };
+}
+
 /**
  * Simpan hasil pengerjaan kuis ke koleksi 'progress' di Firestore.
  */
 export async function saveQuizScoreToFirestore(quizData) {
-  const user = auth ? auth.currentUser : null;
-  const localUserStr = localStorage.getItem("ruanglogika_auth_user");
-  const localUser = localUserStr ? JSON.parse(localUserStr) : null;
-
-  const uid = user ? user.uid : (localUser ? localUser.uid : "tamu_" + Date.now());
-  const nama = user?.displayName || localUser?.namaLengkap || "Siswa Tamu";
-  const email = user?.email || localUser?.email || "tamu@ruanglogika.id";
+  const currentUser = getCurrentUser();
+  const uid = currentUser.uid;
+  const nama = currentUser.namaLengkap;
+  const email = currentUser.email;
 
   const payload = {
     userId: uid,
@@ -226,28 +249,20 @@ export async function initStudentDashboard() {
   const historyTableBody = document.getElementById("student-history-tbody");
   const certificateNameEl = document.getElementById("cert-student-name");
 
-  // Ambil state user
-  const localUserStr = localStorage.getItem("ruanglogika_auth_user");
-  let currentUser = localUserStr ? JSON.parse(localUserStr) : {
-    uid: "siswa_demo",
-    namaLengkap: "Farhan Ardiansyah",
-    email: "farhan@student.id",
-    role: "siswa"
-  };
+  // Ambil state user dinamis
+  const currentUser = getCurrentUser();
 
-  if (auth && auth.currentUser) {
-    currentUser = {
-      uid: auth.currentUser.uid,
-      namaLengkap: auth.currentUser.displayName || currentUser.namaLengkap,
-      email: auth.currentUser.email,
-      role: "siswa"
-    };
-  }
-
-  // Tampilkan Identitas di Header
+  // Tampilkan Identitas Dinamis di Header, Topbar, dan Hero
   if (greetingNameEl) greetingNameEl.textContent = currentUser.namaLengkap;
   if (studentRoleBadge) studentRoleBadge.textContent = "Siswa Aktif";
   if (certificateNameEl) certificateNameEl.textContent = currentUser.namaLengkap;
+
+  document.querySelectorAll(".user-display-name").forEach(el => {
+    el.textContent = currentUser.namaLengkap;
+  });
+
+  // Inisialisasi Mobile Sidebar & Logout
+  initDashboardSidebar();
 
   // Ambil riwayat kuis dari Firestore / Local
   const history = await getUserQuizHistory(currentUser.uid);
@@ -331,13 +346,15 @@ export async function initTeacherDashboard() {
   const gradebookTbody = document.getElementById("teacher-gradebook-tbody");
   const remediationListEl = document.getElementById("teacher-remediation-list");
 
-  // Identitas Guru
-  const localUserStr = localStorage.getItem("ruanglogika_auth_user");
-  const currentUser = localUserStr ? JSON.parse(localUserStr) : {
-    namaLengkap: "Budi Santoso, M.Kom",
-    role: "guru"
-  };
+  // Identitas Guru Dinamis
+  const currentUser = getCurrentUser();
   if (teacherNameEl) teacherNameEl.textContent = currentUser.namaLengkap;
+  document.querySelectorAll(".user-display-name").forEach(el => {
+    el.textContent = currentUser.namaLengkap;
+  });
+
+  initDashboardSidebar();
+  initDashboardTabSwitching();
 
   // Ambil data progres seluruh siswa
   const progressList = await getAllStudentsProgress();
@@ -443,13 +460,15 @@ export async function initAdminDashboard() {
   const statDbStatus = document.getElementById("admin-db-status");
   const usersTbody = document.getElementById("admin-users-tbody");
 
-  // Identitas Admin
-  const localUserStr = localStorage.getItem("ruanglogika_auth_user");
-  const currentUser = localUserStr ? JSON.parse(localUserStr) : {
-    namaLengkap: "Yusuf Nurul Huda (Lead Developer)",
-    role: "admin"
-  };
+  // Identitas Admin Dinamis
+  const currentUser = getCurrentUser();
   if (adminNameEl) adminNameEl.textContent = currentUser.namaLengkap;
+  document.querySelectorAll(".user-display-name").forEach(el => {
+    el.textContent = currentUser.namaLengkap;
+  });
+
+  initDashboardSidebar();
+  initDashboardTabSwitching();
 
   // Status Firebase Database
   if (statDbStatus) {
@@ -505,6 +524,158 @@ export async function initAdminDashboard() {
   }
 }
 
+/**
+ * Pengatur Navigasi Sidebar Responsif & Tombol Logout
+ */
+export function initDashboardSidebar() {
+  const toggleBtn = document.getElementById("btn-toggle-sidebar");
+  const sidebar = document.getElementById("dashboard-sidebar");
+  const overlay = document.getElementById("sidebar-overlay");
+  const logoutBtns = document.querySelectorAll("#btn-logout, .btn-logout-action");
+
+  if (toggleBtn && sidebar) {
+    toggleBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("-translate-x-full");
+      if (overlay) overlay.classList.toggle("hidden");
+    });
+  }
+
+  if (overlay && sidebar) {
+    overlay.addEventListener("click", () => {
+      sidebar.classList.add("-translate-x-full");
+      overlay.classList.add("hidden");
+    });
+  }
+
+  logoutBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (confirm("Apakah Anda yakin ingin keluar dari akun Ruang Logika?")) {
+        localStorage.removeItem("ruanglogika_user");
+        localStorage.removeItem("ruanglogika_auth_user");
+        window.location.href = "login.html";
+      }
+    });
+  });
+}
+
+/**
+ * 4. SINGLE-PAGE TAB SWITCHING (DASHBOARD GURU & ADMIN)
+ * Secara bawaan (default), hanya seksi Dashboard yang terlihat (display: block/flex).
+ * Seksi lain disembunyikan (display: none).
+ * Ketika menu samping diklik, sembunyikan seksi aktif dan tampilkan seksi yang dipilih,
+ * serta perbarui status active pada tombol sidebar secara dinamis.
+ */
+export function initDashboardTabSwitching() {
+  const tabButtons = document.querySelectorAll(".sidebar-tab-btn");
+  const tabPanes = document.querySelectorAll(".tab-pane");
+
+  if (tabButtons.length === 0 || tabPanes.length === 0) return;
+
+  function switchTab(targetId) {
+    if (!targetId) return;
+
+    // Bersihkan karakter hash jika ada
+    const cleanId = targetId.replace(/^#/, "");
+
+    // Validasi apakah elemen tab target ada di DOM
+    const targetPane = document.getElementById(cleanId);
+    if (!targetPane) return;
+
+    // Sembunyikan seluruh seksi tab
+    tabPanes.forEach(pane => {
+      pane.classList.add("hidden");
+      pane.classList.remove("active-tab");
+      pane.style.display = "none";
+    });
+
+    // Tampilkan seksi tab yang dituju
+    targetPane.classList.remove("hidden");
+    targetPane.classList.add("active-tab");
+    targetPane.style.display = "flex";
+
+    // Perbarui gaya tombol sidebar aktif
+    tabButtons.forEach(btn => {
+      const btnTarget = btn.getAttribute("data-tab-target") || (btn.getAttribute("href") ? btn.getAttribute("href").replace(/^#/, "") : "");
+      const isMatch = btnTarget === cleanId || (cleanId === "tab-dashboard" && (btnTarget === "tab-dashboard" || btnTarget === "dashboard"));
+
+      if (isMatch) {
+        btn.classList.add("active", "bg-primary-container", "text-on-primary-container", "font-bold", "shadow-sm");
+        btn.classList.remove("text-on-surface-variant", "font-semibold");
+        const icon = btn.querySelector(".material-symbols-outlined");
+        if (icon) {
+          icon.className = "material-symbols-outlined text-lg text-secondary";
+        }
+      } else {
+        btn.classList.remove("active", "bg-primary-container", "text-on-primary-container", "font-bold", "shadow-sm");
+        btn.classList.add("text-on-surface-variant", "font-semibold");
+        const icon = btn.querySelector(".material-symbols-outlined");
+        if (icon) {
+          icon.className = "material-symbols-outlined text-lg text-on-surface-variant";
+        }
+      }
+    });
+
+    // Tutup sidebar mobile jika terbuka
+    const sidebar = document.getElementById("dashboard-sidebar");
+    const overlay = document.getElementById("sidebar-overlay");
+    if (sidebar && !sidebar.classList.contains("-translate-x-full") && window.innerWidth < 1024) {
+      sidebar.classList.add("-translate-x-full");
+      if (overlay) overlay.classList.add("hidden");
+    }
+
+    // Gulir ke atas
+    const mainEl = document.querySelector("main");
+    if (mainEl) {
+      mainEl.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+
+  // Pasang listener klik ke setiap tombol sidebar tab
+  tabButtons.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      const target = btn.getAttribute("data-tab-target") || (btn.getAttribute("href") ? btn.getAttribute("href").replace(/^#/, "") : "");
+      if (target && target !== "logout" && !btn.classList.contains("btn-logout-action")) {
+        e.preventDefault();
+        switchTab(target);
+        if (window.history && window.history.pushState) {
+          window.history.pushState(null, null, `#${target}`);
+        }
+      }
+    });
+  });
+
+  // Hubungkan tombol pintasan di kartu overview yang memiliki atribut data-tab-target
+  document.querySelectorAll("[data-tab-target]:not(.sidebar-tab-btn)").forEach(quickBtn => {
+    quickBtn.addEventListener("click", (e) => {
+      const target = quickBtn.getAttribute("data-tab-target");
+      if (target) {
+        e.preventDefault();
+        switchTab(target);
+        if (window.history && window.history.pushState) {
+          window.history.pushState(null, null, `#${target}`);
+        }
+      }
+    });
+  });
+
+  // Deteksi URL hash awal saat halaman dimuat
+  const initialHash = window.location.hash ? window.location.hash.replace(/^#/, "") : "";
+  if (initialHash && document.getElementById(initialHash)) {
+    switchTab(initialHash);
+  } else {
+    // Default: Tampilkan hanya seksi Dashboard
+    switchTab("tab-dashboard");
+  }
+
+  // Dengarkan event perpindahan hash browser
+  window.addEventListener("hashchange", () => {
+    const hash = window.location.hash ? window.location.hash.replace(/^#/, "") : "";
+    if (hash && document.getElementById(hash)) {
+      switchTab(hash);
+    }
+  });
+}
+
 // Utility: Escape HTML
 function escapeHtml(str) {
   if (!str) return "";
@@ -517,16 +688,20 @@ function escapeHtml(str) {
 }
 
 // Auto-detect halaman dashboard mana yang sedang aktif
-if (typeof window !== "undefined") {
-  window.addEventListener("DOMContentLoaded", () => {
-    if (document.getElementById("student-dashboard-root")) {
-      initStudentDashboard();
-    }
-    if (document.getElementById("teacher-dashboard-root")) {
-      initTeacherDashboard();
-    }
-    if (document.getElementById("admin-dashboard-root")) {
-      initAdminDashboard();
-    }
-  });
+function runDashboardBootstrap() {
+  if (document.getElementById("student-dashboard-root")) {
+    initStudentDashboard();
+  }
+  if (document.getElementById("teacher-dashboard-root")) {
+    initTeacherDashboard();
+  }
+  if (document.getElementById("admin-dashboard-root")) {
+    initAdminDashboard();
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", runDashboardBootstrap);
+} else {
+  runDashboardBootstrap();
 }

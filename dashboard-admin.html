@@ -4,9 +4,9 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>Dashboard Administrator — Ruang Logika | Pusat Kendali Sistem</title>
-  <meta name="description" content="Pusat manajemen sistem Ruang Logika: kelola hak akses pengguna, status database Firestore, dan konfigurasi serverless web app. Pengembang: Yusuf Nurul Huda."/>
-  <meta property="og:title" content="Dashboard Administrator — Ruang Logika | Pusat Kendali Sistem"/>
-  <meta property="og:description" content="Dashboard Administrator Ruang Logika - Pengembang: Yusuf Nurul Huda."/>
+  <meta name="description" content="Dashboard Administrator Ruang Logika: tata kelola pengguna (users), pemantauan skema database Cloud Firestore, dan audit sistem. Pengembang: Yusuf Nurul Huda."/>
+  <meta property="og:title" content="Dashboard Administrator — Ruang Logika"/>
+  <meta property="og:description" content="Dashboard Administrator Ruang Logika. Pengembang: Yusuf Nurul Huda."/>
   <meta property="og:type" content="website"/>
 
   <!-- Google Typography & Material Icons -->
@@ -78,268 +78,359 @@
     };
   </script>
 </head>
-<body id="admin-dashboard-root" class="bg-surface font-body-md text-on-surface antialiased">
+<body id="admin-dashboard-root" class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col">
   
-  <!-- Fixed Top Header (Google Stitch Navbar) -->
-  <header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl border-b border-outline-variant/40">
-    <div class="h-16 w-[95vw] mx-auto px-2 sm:px-4 flex items-center justify-between gap-3 sm:gap-4">
-      <div class="flex items-center gap-3">
-        <a class="flex items-center gap-2.5" href="index.html">
-          <div class="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center text-on-secondary shadow-sm">
-            <span class="material-symbols-outlined text-xl">account_tree</span>
-          </div>
-          <div class="flex flex-col">
-            <span class="font-headline-md text-lg font-bold tracking-tight text-primary leading-none">Ruang Logika</span>
-            <span class="font-label-md text-[11px] text-on-surface-variant leading-none mt-1">Dashboard Admin</span>
-          </div>
-        </a>
-      </div>
+  <!-- Fixed Topbar (Header) with Dynamic Greeting -->
+  <header class="fixed top-0 left-0 right-0 h-16 bg-surface-container-lowest/95 backdrop-blur-md z-40 border-b border-outline-variant/40 flex items-center justify-between px-4 lg:px-6">
+    <div class="flex items-center gap-3">
+      <!-- Mobile Sidebar Toggle -->
+      <button id="btn-toggle-sidebar" type="button" aria-label="Buka Menu Navigasi" class="lg:hidden p-2 rounded-xl text-primary hover:bg-surface-container transition cursor-pointer">
+        <span class="material-symbols-outlined text-2xl">menu</span>
+      </button>
 
-      <nav class="hidden xl:flex items-center gap-1">
-        <a aria-current="page" class="px-3 py-2 transition-colors bg-primary-container text-on-primary-container font-headline-md text-body-sm rounded-lg shadow-sm" href="dashboard-admin.html">Admin Panel</a>
-        <a class="px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="dashboard-guru.html">Lihat Guru</a>
-        <a class="px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="dashboard-siswa.html">Lihat Siswa</a>
-        <a class="px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="laboratorium.html">Lab Interaktif</a>
-        <a class="px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="peta-belajar.html">Peta Belajar</a>
-      </nav>
-
-      <div class="flex items-center gap-2 sm:gap-3">
-        <div class="hidden sm:flex items-center gap-1.5 bg-surface-container px-2.5 py-1 rounded-full border border-outline-variant/60">
-          <span class="material-symbols-outlined text-purple-600 text-base">shield_person</span>
-          <span class="font-label-md text-xs text-on-surface font-semibold">Super Admin</span>
+      <!-- Logo & App Title -->
+      <a class="flex items-center gap-2.5" href="index.html">
+        <div class="w-9 h-9 rounded-xl bg-purple-600 flex items-center justify-center text-white shadow-sm">
+          <span class="material-symbols-outlined text-xl">admin_panel_settings</span>
         </div>
+        <div class="flex flex-col">
+          <span class="font-headline-md text-lg font-bold tracking-tight text-primary leading-none">Ruang Logika</span>
+          <span class="font-label-md text-[11px] text-purple-700 font-semibold leading-none mt-1">Portal Admin</span>
+        </div>
+      </a>
+    </div>
 
-        <button id="btn-logout" type="button" class="flex items-center gap-1.5 px-3 py-1.5 bg-surface-container-high text-primary rounded-lg font-headline-md text-xs font-semibold hover:bg-surface-container-highest transition">
-          <span class="material-symbols-outlined text-sm">logout</span>
-          <span>Keluar</span>
-        </button>
+    <!-- Topbar Right: Dynamic Admin Greeting & Role Badge -->
+    <div class="flex items-center gap-3 sm:gap-4">
+      <!-- Role Badge -->
+      <div class="hidden sm:flex items-center gap-1.5 bg-purple-100 text-purple-800 px-3 py-1 rounded-full border border-purple-200">
+        <span class="material-symbols-outlined text-sm text-purple-700">shield_person</span>
+        <span class="font-label-md text-xs font-bold">Super Admin</span>
       </div>
+
+      <!-- Sapaan Admin Dinamis -->
+      <div class="flex items-center gap-2.5 pl-2 sm:border-l border-outline-variant/40">
+        <div class="w-8 h-8 rounded-full bg-purple-600 text-white font-code-block font-bold text-xs flex items-center justify-center shadow-xs">
+          <span class="material-symbols-outlined text-base">security</span>
+        </div>
+        <div class="hidden md:flex flex-col text-left">
+          <span class="font-headline-md text-xs font-bold text-primary leading-tight">
+            Admin: <span class="user-display-name">Yusuf Nurul Huda</span>
+          </span>
+          <span class="font-label-md text-[10px] text-on-surface-variant">Lead Developer</span>
+        </div>
+      </div>
+
+      <!-- Quick Logout Button -->
+      <button id="btn-logout" type="button" class="flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface hover:text-error hover:bg-error-container/20 rounded-xl font-headline-md text-xs font-semibold transition cursor-pointer">
+        <span class="material-symbols-outlined text-base">logout</span>
+        <span class="hidden sm:inline">Keluar</span>
+      </button>
     </div>
   </header>
 
-  <!-- Main Fluid Workspace (95vw) -->
-  <main class="w-full pt-16 bg-surface min-h-[calc(100vh-16rem)]">
-    <div class="flex flex-col w-full">
-      <div class="w-[95vw] mx-auto py-4 flex flex-col gap-4">
+  <!-- Backdrop Overlay for Mobile Sidebar -->
+  <div id="sidebar-overlay" class="fixed inset-0 z-40 bg-primary/40 backdrop-blur-xs hidden lg:hidden transition-opacity"></div>
+
+  <!-- Main Container: Role-Based Sidebar + Workspace -->
+  <div class="pt-16 flex flex-1 w-full min-h-[calc(100vh-4rem)]">
+    
+    <!-- ROLE-BASED SIDEBAR (ADMIN) -->
+    <!-- STRICT CONSTRAINT: Sidebar memuat menu: Dashboard, Kelola Pengguna (Users), Status Firestore, dan Logout -->
+    <aside id="dashboard-sidebar" class="fixed lg:static top-16 bottom-0 left-0 w-64 bg-surface-container-lowest border-r border-outline-variant/40 z-50 flex flex-col justify-between p-4 -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out shrink-0">
+      
+      <div class="flex flex-col gap-5">
+        <!-- Sidebar Profile Card -->
+        <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-purple-600 flex items-center justify-center text-white font-code-block font-bold text-sm shadow-xs">
+            AD
+          </div>
+          <div class="flex flex-col min-w-0">
+            <span class="font-headline-md text-xs font-bold text-primary truncate user-display-name">Yusuf Nurul Huda</span>
+            <span class="font-label-md text-[10px] text-purple-700 font-semibold">Administrator Lab</span>
+          </div>
+        </div>
+
+        <!-- Section Label -->
+        <div class="px-2">
+          <span class="font-label-md text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Navigasi Admin</span>
+        </div>
+
+        <!-- 4 Menu Admin Saja (Single-Page Tab Switching) -->
+        <nav class="flex flex-col gap-1.5" id="admin-sidebar-nav">
+          
+          <!-- 1. Dashboard (Active by default) -->
+          <button type="button" data-tab-target="tab-dashboard" class="sidebar-tab-btn active flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-primary-container text-on-primary-container font-headline-md text-xs font-bold shadow-sm transition text-left cursor-pointer w-full">
+            <span class="material-symbols-outlined text-lg text-secondary">admin_panel_settings</span>
+            <span>Dashboard</span>
+          </button>
+
+          <!-- 2. Kelola Pengguna (Users) -->
+          <button type="button" data-tab-target="tab-kelola-pengguna" class="sidebar-tab-btn flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-headline-md text-xs font-semibold transition text-left cursor-pointer w-full">
+            <span class="material-symbols-outlined text-lg">group</span>
+            <span>Kelola Pengguna (Users)</span>
+          </button>
+
+          <!-- 3. Status Firestore -->
+          <button type="button" data-tab-target="tab-status-firestore" class="sidebar-tab-btn flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-headline-md text-xs font-semibold transition text-left cursor-pointer w-full">
+            <span class="material-symbols-outlined text-lg">dns</span>
+            <span>Status Firestore</span>
+          </button>
+
+        </nav>
+      </div>
+
+      <!-- 4. Logout Menu di Bawah Sidebar -->
+      <div class="pt-4 border-t border-outline-variant/40 flex flex-col gap-2">
+        <button type="button" class="btn-logout-action w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-error hover:bg-error-container/20 font-headline-md text-xs font-bold transition cursor-pointer">
+          <span class="material-symbols-outlined text-lg">logout</span>
+          <span>Logout</span>
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- MAIN DASHBOARD CONTENT AREA -->
+    <main class="flex-1 p-4 lg:p-7 overflow-y-auto">
+      <div class="max-w-7xl mx-auto flex flex-col gap-6">
         
-        <!-- Header Banner Card (Stitch Style) -->
-        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-surface-container-lowest p-4 sm:p-5 rounded-xl shadow-sm border border-outline-variant/20">
-          <div class="flex flex-col">
-            <div class="flex items-center gap-2">
-              <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-primary text-tertiary-fixed-dim">
-                <span class="material-symbols-outlined text-base">admin_panel_settings</span>
-              </span>
-              <span class="font-label-md text-xs uppercase tracking-wider text-secondary font-bold">Pusat Kendali Sistem</span>
-              <div id="admin-db-status" class="ml-2">
-                <!-- Populated by js/db.js -->
-              </div>
-            </div>
-            <h1 class="font-headline-xl text-xl sm:text-2xl text-primary tracking-tight mt-1 font-bold">
-              Administrator Sistem: <span id="admin-name" class="text-secondary">Yusuf Nurul Huda</span>
-            </h1>
-            <p class="font-body-sm text-xs sm:text-sm text-on-surface-variant">
-              Kelola entitas pengguna, tinjau integritas koleksi database Firestore, dan monitor lalu lintas evaluasi kuis secara terpadu.
-            </p>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <a href="laboratorium.html" class="flex items-center gap-1.5 px-4 py-2 bg-secondary text-on-secondary rounded-lg font-headline-md text-xs sm:text-sm font-semibold hover:bg-secondary/90 shadow-sm transition">
-              <span class="material-symbols-outlined text-base">science</span>
-              <span>Buka Lab Virtual</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- STATS OVERVIEW CARDS (Stitch Bento) -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <!-- TAB 1: DASHBOARD OVERVIEW (DEFAULT VISIBLE) -->
+        <div id="tab-dashboard" class="tab-pane active-tab flex flex-col gap-6 w-full">
           
-          <div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant/30 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-purple-100 text-purple-800 flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-xl">manage_accounts</span>
-            </div>
+          <!-- Header Banner Card (Stitch Style) -->
+          <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/30">
             <div class="flex flex-col">
-              <span class="font-label-md text-[10px] text-on-surface-variant uppercase">Pengguna Terdaftar</span>
-              <span id="admin-stat-total-users" class="font-code-block text-xl font-bold text-primary mt-0.5">6 Akun</span>
-            </div>
-          </div>
-
-          <div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant/30 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-xl">task_alt</span>
-            </div>
-            <div class="flex flex-col">
-              <span class="font-label-md text-[10px] text-on-surface-variant uppercase">Sesi Kuis Selesai</span>
-              <span id="admin-stat-total-quizzes" class="font-code-block text-xl font-bold text-primary mt-0.5">6 Sesi</span>
-            </div>
-          </div>
-
-          <div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant/30 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-xl">cloud_sync</span>
-            </div>
-            <div class="flex flex-col">
-              <span class="font-label-md text-[10px] text-on-surface-variant uppercase">Koleksi Firestore</span>
-              <span class="font-code-block text-xs font-bold text-secondary mt-0.5">users &amp; progress</span>
-            </div>
-          </div>
-
-          <div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant/30 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-xl">hub</span>
-            </div>
-            <div class="flex flex-col">
-              <span class="font-label-md text-[10px] text-on-surface-variant uppercase">Arsitektur Web</span>
-              <span class="font-label-md text-xs font-bold text-primary mt-0.5">Serverless MPA</span>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- 2-COLUMN MAIN CONTENT (Bento Stitch) -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
-          
-          <!-- LEFT: USERS MANAGEMENT TABLE (8 cols) -->
-          <div class="lg:col-span-8 flex flex-col gap-4">
-            
-            <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant/30 flex flex-col gap-3">
-              <div class="flex items-center justify-between pb-2 border-b border-outline-variant/30">
-                <div class="flex items-center gap-2">
-                  <span class="material-symbols-outlined text-secondary text-lg">group</span>
-                  <h3 class="font-headline-md text-sm font-bold text-primary">Manajemen Akun Pengguna (Koleksi users)</h3>
-                </div>
-                <a href="register.html" class="font-label-md text-xs text-secondary hover:underline font-semibold">+ Tambah User</a>
-              </div>
-
-              <div class="overflow-x-auto rounded-lg border border-outline-variant/30">
-                <table class="w-full text-left font-body-sm text-xs">
-                  <thead class="bg-surface-container font-headline-md text-on-surface text-[11px] uppercase tracking-wider border-b border-outline-variant/30">
-                    <tr>
-                      <th class="py-2.5 px-3">#</th>
-                      <th class="py-2.5 px-3">Nama Lengkap</th>
-                      <th class="py-2.5 px-3">Email</th>
-                      <th class="py-2.5 px-3">Role</th>
-                      <th class="py-2.5 px-3">Tgl Daftar</th>
-                      <th class="py-2.5 px-3">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody id="admin-users-tbody">
-                    <!-- Populated by js/db.js -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- RIGHT: FIRESTORE SCHEMA & GITHUB PAGES INFO (4 cols) -->
-          <div class="lg:col-span-4 flex flex-col gap-4">
-            
-            <!-- Schema Card -->
-            <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant/30 flex flex-col gap-3">
-              <div class="flex items-center gap-2 pb-2 border-b border-outline-variant/30">
-                <span class="material-symbols-outlined text-secondary text-lg">database</span>
-                <h4 class="font-headline-md text-xs font-bold text-primary uppercase tracking-wider">Skema Koleksi Firestore</h4>
-              </div>
-              <div class="flex flex-col gap-2 font-body-sm text-xs">
-                <div class="p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/30">
-                  <span class="font-code-block font-bold text-secondary text-[11px]">/users/{uid}</span>
-                  <p class="text-[11px] text-on-surface-variant mt-0.5">Menyimpan namaLengkap, email, role (siswa/guru/admin), dan timestamp.</p>
-                </div>
-                <div class="p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/30">
-                  <span class="font-code-block font-bold text-tertiary-fixed-dim text-[11px]">/progress/{docId}</span>
-                  <p class="text-[11px] text-on-surface-variant mt-0.5">Menyimpan userId, score, answers, timeSpentSeconds, dan serverTimestamp.</p>
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-primary text-tertiary-fixed-dim">
+                  <span class="material-symbols-outlined text-base">admin_panel_settings</span>
+                </span>
+                <span class="font-label-md text-xs uppercase tracking-wider text-secondary font-bold">Pusat Kendali Sistem</span>
+                <div id="admin-db-status" class="ml-2">
+                  <!-- Status koneksi Firestore oleh js/db.js -->
                 </div>
               </div>
-            </div>
-
-            <!-- GitHub Pages Hosting Card -->
-            <div class="bg-primary-container text-on-primary-container rounded-xl p-5 shadow-sm border border-outline-variant/40 flex flex-col gap-2.5">
-              <div class="flex items-center gap-1.5 font-label-md text-xs text-tertiary-fixed-dim font-bold">
-                <span class="material-symbols-outlined text-sm">rocket_launch</span> Deployment Status
-              </div>
-              <h4 class="font-headline-md text-xs font-bold text-white">Hosting Ready di GitHub Pages</h4>
-              <p class="font-body-sm text-xs text-on-primary-container leading-relaxed">
-                Seluruh arsitektur dibangun menggunakan HTML5, CSS3, dan Vanilla JavaScript murni tanpa server PHP/MySQL, siap di-deploy secara instan ke GitHub Pages.
+              <h1 class="font-headline-xl text-xl sm:text-2xl text-primary tracking-tight mt-1.5 font-bold">
+                Administrator Sistem: <span id="admin-name" class="text-secondary user-display-name">Yusuf Nurul Huda</span>
+              </h1>
+              <p class="font-body-sm text-xs sm:text-sm text-on-surface-variant max-w-2xl mt-0.5">
+                Kendali manajemen akun pengguna, sinkronisasi koleksi Firestore (koleksi <code>users</code> &amp; <code>progress</code>), dan pemantauan integritas data platform Ruang Logika.
               </p>
-              <div class="pt-1 font-label-md text-[10px] text-on-primary-container">
-                Pengembang Sistem: <span class="text-tertiary-fixed-dim">Yusuf Nurul Huda</span>
+            </div>
+
+            <div class="flex items-center gap-3 shrink-0">
+              <a href="dashboard-siswa.html" class="flex items-center gap-1.5 px-3.5 py-2 bg-surface-container-high text-primary rounded-xl font-headline-md text-xs font-semibold hover:bg-surface-container-highest transition">
+                <span class="material-symbols-outlined text-sm">visibility</span>
+                <span>Mode Siswa</span>
+              </a>
+              <a href="dashboard-guru.html" class="flex items-center gap-1.5 px-3.5 py-2 bg-surface-container-high text-primary rounded-xl font-headline-md text-xs font-semibold hover:bg-surface-container-highest transition">
+                <span class="material-symbols-outlined text-sm">visibility</span>
+                <span>Mode Guru</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- STATS OVERVIEW CARDS (Stitch Bento) -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <div class="bg-surface-container-lowest rounded-2xl p-4 sm:p-5 shadow-sm border border-outline-variant/30 flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-2xl">manage_accounts</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-wider">Total Akun Terdaftar</span>
+                <span id="admin-stat-total-users" class="font-code-block text-2xl font-bold text-primary mt-0.5">6 Akun</span>
+              </div>
+            </div>
+
+            <div class="bg-surface-container-lowest rounded-2xl p-4 sm:p-5 shadow-sm border border-outline-variant/30 flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-2xl">quiz</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-wider">Sesi Kuis Selesai</span>
+                <span id="admin-stat-total-quizzes" class="font-code-block text-2xl font-bold text-primary mt-0.5">6 Dokumen</span>
+              </div>
+            </div>
+
+            <div class="bg-surface-container-lowest rounded-2xl p-4 sm:p-5 shadow-sm border border-outline-variant/30 flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-2xl">speed</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-wider">Latensi Cloud Firestore</span>
+                <span class="font-code-block text-2xl font-bold text-emerald-700 mt-0.5">24 ms</span>
+              </div>
+            </div>
+
+            <div class="bg-surface-container-lowest rounded-2xl p-4 sm:p-5 shadow-sm border border-outline-variant/30 flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-2xl">lock</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-wider">Aturan Keamanan (Rules)</span>
+                <span class="font-code-block text-2xl font-bold text-secondary mt-0.5">RBAC Aktif</span>
               </div>
             </div>
 
           </div>
 
+          <!-- Bento Quick Links for Fast Jump -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 flex items-center justify-between hover:border-secondary transition shadow-sm">
+              <div class="flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-xl">group</span>
+                </div>
+                <div>
+                  <h4 class="font-headline-md text-sm font-bold text-primary">Kelola Pengguna Sistem</h4>
+                  <p class="font-body-sm text-xs text-on-surface-variant">Daftar akun siswa, guru, dan admin terdaftar di Firestore.</p>
+                </div>
+              </div>
+              <button type="button" data-tab-target="tab-kelola-pengguna" class="px-3 py-1.5 rounded-lg bg-surface-container-high text-primary hover:bg-secondary hover:text-white font-headline-md text-xs font-semibold transition cursor-pointer">
+                Buka
+              </button>
+            </div>
+
+            <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 flex items-center justify-between hover:border-secondary transition shadow-sm">
+              <div class="flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center">
+                  <span class="material-symbols-outlined text-xl">dns</span>
+                </div>
+                <div>
+                  <h4 class="font-headline-md text-sm font-bold text-primary">Status Skema Firestore</h4>
+                  <p class="font-body-sm text-xs text-on-surface-variant">Inspeksi skema koleksi users &amp; progress serta integritas data.</p>
+                </div>
+              </div>
+              <button type="button" data-tab-target="tab-status-firestore" class="px-3 py-1.5 rounded-lg bg-surface-container-high text-primary hover:bg-secondary hover:text-white font-headline-md text-xs font-semibold transition cursor-pointer">
+                Buka
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TAB 2: KELOLA PENGGUNA (USERS) -->
+        <div id="tab-kelola-pengguna" class="tab-pane hidden flex flex-col gap-6 w-full">
+          <section id="kelola-pengguna-section" class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-outline-variant/30">
+              <div class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-secondary text-2xl">group</span>
+                <div>
+                  <h2 class="font-headline-lg text-lg font-bold text-primary">Kelola Pengguna (Users Firestore)</h2>
+                  <p class="font-body-sm text-xs text-on-surface-variant">Daftar akun siswa, pengajar, dan administrator yang tersimpan di Cloud Firestore koleksi <code>users</code>.</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <span class="font-label-md text-xs px-2.5 py-1 rounded-lg bg-surface-container-low text-on-surface-variant font-medium">Koleksi: /users</span>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-outline-variant/30 text-on-surface-variant font-label-md text-[11px] uppercase tracking-wider">
+                    <th class="py-3 px-4">No</th>
+                    <th class="py-3 px-4">Nama Lengkap</th>
+                    <th class="py-3 px-4">Alamat Email</th>
+                    <th class="py-3 px-4">Peran (Role)</th>
+                    <th class="py-3 px-4">Waktu Pendaftaran</th>
+                    <th class="py-3 px-4">Status Sesi</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-users-tbody">
+                  <!-- Diisi otomatis oleh js/db.js -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+        <!-- TAB 3: STATUS FIRESTORE -->
+        <div id="tab-status-firestore" class="tab-pane hidden flex flex-col gap-6 w-full">
+          <section id="status-firestore-section" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Schema & Koleksi Status -->
+            <div class="lg:col-span-7 bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-4">
+              <div class="flex items-center gap-2.5 pb-3 border-b border-outline-variant/30">
+                <span class="material-symbols-outlined text-secondary text-xl">dns</span>
+                <h3 class="font-headline-lg text-base sm:text-lg font-bold text-primary">Status Skema Koleksi Cloud Firestore</h3>
+              </div>
+
+              <div class="flex flex-col gap-3 text-xs leading-relaxed">
+                <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-start justify-between gap-3">
+                  <div class="flex flex-col">
+                    <span class="font-headline-md font-bold text-primary text-xs flex items-center gap-1.5 font-code-block">
+                      <span class="material-symbols-outlined text-secondary text-sm">folder</span>
+                      collection("users")
+                    </span>
+                    <span class="font-body-sm text-[11px] text-on-surface-variant mt-1">
+                      Menyimpan profil pengguna: <code>uid</code>, <code>namaLengkap</code>, <code>email</code>, <code>role (siswa|guru|admin)</code>, <code>kelas</code>, <code>xp</code>, dan <code>level</code>.
+                    </span>
+                  </div>
+                  <span class="font-label-md text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold shrink-0">Siap</span>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-start justify-between gap-3">
+                  <div class="flex flex-col">
+                    <span class="font-headline-md font-bold text-primary text-xs flex items-center gap-1.5 font-code-block">
+                      <span class="material-symbols-outlined text-secondary text-sm">folder</span>
+                      collection("progress")
+                    </span>
+                    <span class="font-body-sm text-[11px] text-on-surface-variant mt-1">
+                      Menyimpan rekap evaluasi: <code>userId</code>, <code>score</code>, <code>quizTitle</code>, <code>timeSpentSeconds</code>, <code>passed</code>, dan <code>timestamp</code>.
+                    </span>
+                  </div>
+                  <span class="font-label-md text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold shrink-0">Siap</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Audit Keamanan & GitHub Pages Serverless -->
+            <div class="lg:col-span-5 bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-4">
+              <div class="flex items-center gap-2 pb-3 border-b border-outline-variant/30">
+                <span class="material-symbols-outlined text-purple-600 text-xl">verified_user</span>
+                <h3 class="font-headline-md text-sm font-bold text-primary">Integritas Arsitektur Serverless</h3>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-primary-container text-on-primary-container border border-outline-variant/40 flex flex-col gap-2">
+                <span class="font-label-md text-[10px] text-tertiary-fixed-dim uppercase tracking-wider font-bold">Hosting Target: GitHub Pages</span>
+                <p class="font-body-sm text-xs leading-relaxed text-on-primary-container/90">
+                  Aplikasi ini sepenuhnya <strong>Serverless</strong> (HTML5, CSS3, Vanilla JS Modular). Semua autentikasi dan penyimpanan data dilakukan melalui Client-Side SDK Firebase v9+.
+                </p>
+                <div class="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] font-code-block">
+                  <span>SDK: Firebase v10.12.0</span>
+                  <span class="text-secondary font-bold">Murni Client-Side</span>
+                </div>
+              </div>
+            </div>
+
+          </section>
         </div>
 
       </div>
-    </div>
-  </main>
+    </main>
+
+  </div>
 
   <!-- Google Stitch Footer -->
-  <footer class="w-full bg-surface-container-lowest border-t border-outline-variant/40 mt-8 py-8 transition-colors">
-    <div class="w-[95vw] mx-auto px-2 sm:px-4 flex flex-col gap-6">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        
-        <div class="flex flex-col gap-2 md:col-span-1">
-          <div class="flex items-center gap-2">
-            <div class="w-7 h-7 rounded-lg bg-secondary flex items-center justify-center text-on-secondary shadow-xs">
-              <span class="material-symbols-outlined text-base">account_tree</span>
-            </div>
-            <span class="font-headline-md text-base font-bold text-primary">Ruang Logika</span>
-          </div>
-          <p class="font-body-sm text-xs text-on-surface-variant max-w-sm leading-relaxed">
-            Platform Pembelajaran Interaktif Struktur Data &amp; Algoritma untuk Generasi Digital SMA.
-          </p>
-          <div class="flex items-center gap-2 mt-1">
-            <span class="font-label-md text-[11px] px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-semibold">
-              Edisi Siswa SMA Kelas X
-            </span>
-          </div>
-        </div>
-
-        <div class="flex flex-col gap-1.5">
-          <span class="font-headline-md text-sm font-semibold text-on-surface mb-1">Navigasi Cepat</span>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="index.html">Beranda</a>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="peta-belajar.html">Peta Belajar</a>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="materi.html">Materi Pembelajaran</a>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="laboratorium.html">Laboratorium Virtual</a>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="tantangan.html">Studi Kasus</a>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="kuis.html">Uji Kompetensi</a>
-        </div>
-
-        <div class="flex flex-col gap-1.5">
-          <span class="font-headline-md text-sm font-semibold text-on-surface mb-1">Fasilitas &amp; Peran</span>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="dashboard-siswa.html">Dashboard Siswa</a>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="dashboard-guru.html">Pemantauan Guru</a>
-          <a class="font-body-sm text-xs text-secondary font-bold" href="dashboard-admin.html">Tata Kelola Admin</a>
-          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="login.html">Portal Akses Akun</a>
-        </div>
-
-        <div class="flex flex-col gap-1.5">
-          <span class="font-headline-md text-sm font-semibold text-on-surface mb-1">Pengembang &amp; Hak Cipta</span>
-          <div class="p-3 rounded-lg bg-surface-container border border-outline-variant/60 flex flex-col gap-1">
-            <span class="font-label-md text-[11px] text-on-surface-variant">Penanggung Jawab Sistem:</span>
-            <span class="font-headline-md text-xs font-bold text-primary">Pengembang: Yusuf Nurul Huda</span>
-            <span class="font-body-sm text-[11px] text-on-surface-variant mt-0.5">Spesialisasi Kurikulum Informatika SMA &amp; Media Interaktif Algoritma.</span>
-          </div>
-        </div>
-
+  <footer class="w-full bg-surface-container-lowest border-t border-outline-variant/40 py-6 transition-colors">
+    <div class="w-[95vw] mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-on-surface-variant">
+      <div class="flex items-center gap-2">
+        <span class="font-headline-md font-bold text-primary">Ruang Logika</span>
+        <span>&bull;</span>
+        <span>Pusat Tata Kelola &amp; Administrasi Sistem</span>
       </div>
-
-      <div class="border-t border-outline-variant/40 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-        <p class="font-body-sm text-xs text-on-surface-variant text-center sm:text-left">
-          &copy; 2025 Ruang Logika. Hak Cipta Dilindungi Undang-Undang. Pengembang: Yusuf Nurul Huda
-        </p>
-        <div class="flex items-center gap-4">
-          <span class="font-label-md text-xs text-on-surface-variant font-medium">SMA Kelas X &bull; Informatika</span>
-        </div>
+      <div>
+        <strong>Pengembang: Yusuf Nurul Huda</strong>
       </div>
     </div>
   </footer>
 
-  <!-- Module Scripts -->
+  <!-- Scripts -->
   <script type="module" src="js/firebase-config.js"></script>
   <script type="module" src="js/auth.js"></script>
-  <script type="module" src="js/main.js"></script>
   <script type="module" src="js/db.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>
