@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Materi Pembelajaran — Ruang Logika | Memahami Stack & Queue</title>
+  <meta name="description" content="Modul Pembelajaran Interaktif Struktur Data Linear: Stack (LIFO) dan Queue (FIFO) untuk Generasi Digital SMA. Pengembang: Yusuf Nurul Huda."/>
+  <meta property="og:title" content="Materi Pembelajaran — Ruang Logika | Memahami Stack & Queue"/>
+  <meta property="og:description" content="Modul Pembelajaran Interaktif Struktur Data Linear: Stack (LIFO) dan Queue (FIFO) SMA. Pengembang: Yusuf Nurul Huda."/>
+  <meta property="og:type" content="website"/>
+
+  <!-- Google Typography & Material Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+
+  <!-- Core Stylesheets -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-high": "#e6e8eb",
+            "primary-container": "#17324d",
+            "on-primary-container": "#819aba",
+            "surface-bright": "#f7f9fc",
+            "on-secondary": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "outline": "#74777e",
+            "on-surface-variant": "#43474d",
+            "primary": "#001d36",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6",
+            "on-error": "#ffffff",
+            "on-background": "#191c1e",
+            "tertiary-fixed": "#ffdea7",
+            "tertiary-fixed-dim": "#f8bd45",
+            "on-tertiary-fixed": "#271900",
+            "on-secondary-fixed": "#00201d",
+            "on-surface": "#191c1e",
+            "inverse-surface": "#2d3133",
+            "tertiary": "#271900",
+            "on-primary-fixed": "#001d36",
+            "surface-container-lowest": "#ffffff",
+            "secondary-container": "#82f6e7",
+            "tertiary-container": "#422d00",
+            "surface-tint": "#47607e",
+            "primary-fixed-dim": "#afc9ea",
+            "surface": "#f7f9fc",
+            "on-secondary-container": "#007167",
+            "surface-container-low": "#f2f4f7",
+            "surface-variant": "#e0e3e6",
+            "secondary": "#006a61",
+            "surface-container-highest": "#e0e3e6",
+            "on-primary": "#ffffff",
+            "surface-container": "#eceef1",
+            "background": "#f7f9fc"
+          },
+          fontFamily: {
+            "headline-xl": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "display-lg": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-lg": ["JetBrains Mono"],
+            "label-md": ["JetBrains Mono"],
+            "code-block": ["JetBrains Mono"]
+          }
+        }
+      }
+    };
+  </script>
+  <script type="module" crossorigin src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script type="module" crossorigin src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+  <script type="module" crossorigin src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+  <script type="module" crossorigin src="/assets/firebase-config-DMOTfB5-.js"></script>
+  <script type="module" crossorigin src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+  <script type="module" crossorigin src="/assets/main-DJLc8q4W.js"></script>
+  <script type="module" crossorigin src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+  <script type="module" crossorigin src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+  <script type="module" crossorigin src="/assets/auth-CviBMWfd.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/firebase-config-B3qLpz7U.css">
+</head>
+<body class="bg-surface font-body-md text-on-surface antialiased">
+  
+  <!-- Fixed Top Header (Google Stitch Navbar) -->
+  <header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl border-b border-outline-variant/40">
+    <div class="h-16 w-[95vw] mx-auto px-2 sm:px-4 flex items-center justify-between gap-3 sm:gap-4">
+      <div class="flex items-center gap-2.5">
+        <button id="btn-mobile-nav-toggle" type="button" aria-label="Buka Menu Navigasi" class="xl:hidden p-1.5 -ml-1 rounded-xl text-primary hover:bg-surface-container-high transition cursor-pointer flex items-center justify-center">
+          <span class="material-symbols-outlined text-2xl">menu</span>
+        </button>
+        <a class="flex items-center gap-2.5" href="index.html">
+          <div class="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center text-on-secondary shadow-sm">
+            <span class="material-symbols-outlined text-xl">account_tree</span>
+          </div>
+          <span class="font-headline-md text-lg font-bold tracking-tight text-primary">Ruang Logika</span>
+        </a>
+      </div>
+
+      <nav class="hidden xl:flex items-center gap-1">
+        <a class="px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="index.html">Beranda</a>
+        <a class="px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="peta-belajar.html">Peta Belajar</a>
+        <a aria-current="page" class="px-3 py-2 transition-colors bg-primary-container text-on-primary-container font-headline-md text-body-sm rounded-lg shadow-sm" href="materi.html">Materi</a>
+        <a class="px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="laboratorium.html">Lab Interaktif</a>
+        <a class="px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="tantangan.html">Tantangan Kasus</a>
+        <a class="px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" href="kuis.html">Kuis &amp; Evaluasi</a>
+      </nav>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <div class="relative">
+          <select id="modeSelector" class="font-body-sm text-xs bg-surface-container-lowest text-on-surface border border-outline-variant rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-secondary cursor-pointer shadow-sm">
+            <option value="siswa" selected>Mode Siswa</option>
+            <option value="guru">Mode Guru</option>
+            <option value="admin">Mode Admin</option>
+            <option value="auth">Login / Register</option>
+          </select>
+        </div>
+
+        <div class="hidden sm:flex items-center gap-1.5 bg-surface-container px-2.5 py-1 rounded-full border border-outline-variant/60">
+          <span class="material-symbols-outlined text-secondary text-base">verified</span>
+          <span class="font-label-md text-xs text-on-surface font-semibold user-display-xp">Level 4 • 850 XP</span>
+        </div>
+
+        <div id="header-auth-container" class="flex items-center">
+          <a href="login.html" class="flex items-center gap-1.5 px-3 py-1.5 bg-secondary text-on-secondary rounded-lg font-headline-md text-xs font-bold hover:bg-secondary/90 shadow-sm transition">
+            <span class="material-symbols-outlined text-sm">login</span>
+            <span>Masuk / Daftar</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Fluid Workspace (95vw) -->
+  <main class="w-full pt-16 bg-surface min-h-[calc(100vh-16rem)]">
+    <div class="flex flex-col w-full">
+      <div class="w-[95vw] mx-auto py-4 flex flex-col gap-4">
+        
+        <!-- Header Banner Card (Stitch Style) -->
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-surface-container-lowest p-4 sm:p-5 rounded-xl shadow-sm border border-outline-variant/20">
+          <div class="flex flex-col">
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-secondary text-on-secondary">
+                <span class="material-symbols-outlined text-base">auto_stories</span>
+              </span>
+              <span class="font-label-md text-xs uppercase tracking-wider text-secondary font-bold">Modul Pembelajaran Interaktif</span>
+            </div>
+            <h1 class="font-headline-xl text-xl sm:text-2xl text-primary tracking-tight mt-1 font-bold">
+              Memahami Struktur Data Linear: Stack (LIFO) &amp; Queue (FIFO)
+            </h1>
+            <p class="font-body-sm text-xs sm:text-sm text-on-surface-variant">
+              Pelajari mekanisme tumpukan piring dan antrean kasir nyata untuk memahami cara kerja memori komputer modern.
+            </p>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+            <div class="hidden sm:flex items-center gap-2 bg-surface-container px-3 py-1.5 rounded-lg border border-outline-variant/40">
+              <span class="material-symbols-outlined text-sm text-on-surface-variant">timer</span>
+              <span class="font-label-md text-xs text-on-surface">15 Menit Baca</span>
+            </div>
+            <a href="laboratorium.html" class="flex items-center gap-1.5 px-4 py-2 bg-secondary text-on-secondary rounded-lg font-headline-md text-xs sm:text-sm font-semibold hover:bg-secondary/90 shadow-sm transition">
+              <span class="material-symbols-outlined text-base">science</span>
+              <span>Buka Lab Virtual</span>
+            </a>
+            <a href="kuis.html" class="flex items-center gap-1.5 px-4 py-2 bg-primary text-on-primary rounded-lg font-headline-md text-xs sm:text-sm font-semibold hover:bg-primary/90 shadow-sm transition">
+              <span class="material-symbols-outlined text-base">quiz</span>
+              <span>Uji di Kuis</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 2-Column Content Grid: 25% Sticky TOC & 75% Modular Reader -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
+          
+          <!-- LEFT COLUMN: Sticky Table of Contents (3 cols / ~25%) -->
+          <div class="lg:col-span-3 flex flex-col gap-4 lg:sticky lg:top-20">
+            
+            <!-- Table of Contents Card -->
+            <div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm flex flex-col gap-3 border border-outline-variant/30">
+              <div class="flex items-center justify-between pb-2 border-b border-outline-variant/30">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-secondary text-base">menu_book</span>
+                  <span class="font-headline-md text-xs font-bold text-primary uppercase tracking-wider">Daftar Isi Modul</span>
+                </div>
+                <span class="font-label-md text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-bold">5 Bab</span>
+              </div>
+
+              <nav class="flex flex-col gap-1 text-xs font-body-sm">
+                <a href="#pengantar" class="p-2 rounded-lg font-medium text-on-surface hover:bg-surface-container-high transition-colors flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                  <span>1. Pengantar Struktur Data</span>
+                </a>
+                <a href="#stack-konsep" class="p-2 rounded-lg font-medium text-on-surface hover:bg-surface-container-high transition-colors flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                  <span>2. Konsep Stack (LIFO)</span>
+                </a>
+                <a href="#stack-operasi" class="pl-6 pr-2 py-1 text-[11px] text-on-surface-variant hover:text-secondary transition-colors">
+                  &bull; Operasi Push, Pop, Peek
+                </a>
+                <a href="#stack-analogi" class="pl-6 pr-2 py-1 text-[11px] text-on-surface-variant hover:text-secondary transition-colors">
+                  &bull; Analogi Piring &amp; Undo Browser
+                </a>
+                <a href="#queue-konsep" class="p-2 rounded-lg font-medium text-on-surface hover:bg-surface-container-high transition-colors flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed-dim"></span>
+                  <span>3. Konsep Queue (FIFO)</span>
+                </a>
+                <a href="#queue-operasi" class="pl-6 pr-2 py-1 text-[11px] text-on-surface-variant hover:text-secondary transition-colors">
+                  &bull; Operasi Enqueue &amp; Dequeue
+                </a>
+                <a href="#queue-analogi" class="pl-6 pr-2 py-1 text-[11px] text-on-surface-variant hover:text-secondary transition-colors">
+                  &bull; Analogi Kasir &amp; Printer Spooler
+                </a>
+                <a href="#komparasi" class="p-2 rounded-lg font-medium text-on-surface hover:bg-surface-container-high transition-colors flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                  <span>4. Tabel Perbandingan</span>
+                </a>
+                <a href="#ringkasan" class="p-2 rounded-lg font-medium text-on-surface hover:bg-surface-container-high transition-colors flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                  <span>5. Kesimpulan &amp; Praktik</span>
+                </a>
+              </nav>
+            </div>
+
+            <!-- Mini Challenge Card (Stitch Style) -->
+            <div class="bg-primary-container text-on-primary-container rounded-xl p-4 shadow-sm flex flex-col gap-2.5 border border-outline-variant/30">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-tertiary-fixed-dim text-lg">emoji_events</span>
+                <span class="font-headline-md text-xs font-bold text-white uppercase tracking-wider">Tantangan Cepat</span>
+              </div>
+              <p class="font-body-sm text-xs text-on-primary-container leading-relaxed">
+                Ingin melihat langsung bagaimana Stack membalik kata atau Queue mengantrekan tiket? Coba tantangan interaktif!
+              </p>
+              <a href="tantangan.html" class="mt-1 w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-tertiary-fixed-dim text-on-tertiary-fixed font-headline-md text-xs font-bold shadow-sm hover:brightness-105 transition">
+                <span>Buka Arena Tantangan</span>
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+              </a>
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN: Modular Learning Content (9 cols / ~75%) -->
+          <div class="lg:col-span-9 flex flex-col gap-4">
+            
+            <!-- BAB 1: PENGANTAR -->
+            <section id="pengantar" class="bg-surface-container-lowest rounded-xl p-5 sm:p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-4 scroll-mt-20">
+              <div class="flex items-center gap-2">
+                <span class="font-label-md text-xs font-bold text-secondary bg-secondary-container px-2.5 py-0.5 rounded-full">
+                  BAB 01
+                </span>
+                <span class="font-label-md text-xs text-on-surface-variant font-semibold">Fondasi Algoritma Komputasi</span>
+              </div>
+
+              <h2 class="font-headline-lg text-lg sm:text-xl font-bold text-primary">
+                Mengapa Kita Memerlukan Struktur Data Linear?
+              </h2>
+
+              <p class="font-body-md text-xs sm:text-sm text-on-surface leading-relaxed">
+                Dalam kehidupan sehari-hari, data tidak datang secara acak tanpa aturan. Saat kamu mengetik tugas sekolah di komputer dan salah menghapus satu paragraf, kamu langsung menekan pintasan <strong>Ctrl + Z (Undo)</strong>. Aksi terakhir yang kamu lakukan seketika dibatalkan lebih awal. Sebaliknya, saat kamu memesan makanan di kantin sekolah atau mengantre tiket bioskop, siswa yang datang lebih dahulu akan dilayani lebih dahulu.
+              </p>
+
+              <p class="font-body-md text-xs sm:text-sm text-on-surface leading-relaxed">
+                Kedua contoh di atas adalah implementasi nyata dari <strong>Struktur Data Linear</strong>. Struktur data linear menyusun data secara berurutan, di mana setiap elemen terhubung langsung dengan elemen sebelum dan sesudahnya.
+              </p>
+
+              <!-- Overview Bento Pair -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/40 flex items-start gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-secondary text-on-secondary flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-lg">layers</span>
+                  </div>
+                  <div>
+                    <h3 class="font-headline-md text-xs sm:text-sm font-bold text-primary">Stack (Tumpukan)</h3>
+                    <p class="font-body-sm text-[11px] sm:text-xs text-on-surface-variant mt-0.5">
+                      Prinsip <strong>LIFO (Last In, First Out)</strong>: Elemen yang terakhir masuk adalah yang pertama kali dikeluarkan.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/40 flex items-start gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-tertiary-fixed-dim text-on-tertiary-fixed flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-lg">queue</span>
+                  </div>
+                  <div>
+                    <h3 class="font-headline-md text-xs sm:text-sm font-bold text-primary">Queue (Antrean)</h3>
+                    <p class="font-body-sm text-[11px] sm:text-xs text-on-surface-variant mt-0.5">
+                      Prinsip <strong>FIFO (First In, First Out)</strong>: Elemen yang pertama masuk adalah yang pertama kali dilayani.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- BAB 2: STACK -->
+            <section id="stack-konsep" class="bg-surface-container-lowest rounded-xl p-5 sm:p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-4 scroll-mt-20">
+              <div class="flex items-center gap-2">
+                <span class="font-label-md text-xs font-bold text-secondary bg-secondary-container px-2.5 py-0.5 rounded-full">
+                  BAB 02
+                </span>
+                <span class="font-label-md text-xs text-on-surface-variant font-semibold">Tumpukan Satu Pintu Akses</span>
+              </div>
+
+              <h2 class="font-headline-lg text-lg sm:text-xl font-bold text-primary">
+                Stack: Prinsip Mekanis LIFO (Last In, First Out)
+              </h2>
+
+              <p class="font-body-md text-xs sm:text-sm text-on-surface leading-relaxed">
+                Analogi paling intuitif dari Stack adalah <strong>tumpukan piring bersih di atas meja</strong>. Saat kamu menaruh piring baru setelah dicuci, piring itu ditaruh tepat di atas tumpukan. Saat seseorang hendak mengambil piring untuk makan, piring paling ataslah yang diambil terlebih dahulu. Tumpukan ini hanya memiliki <strong>satu ujung terbuka</strong> yang disebut posisi <strong>TOP</strong>.
+              </p>
+
+              <!-- Visual Mental Diagram Box -->
+              <div class="p-4 rounded-xl bg-primary-container text-on-primary-container border border-outline-variant/40 flex flex-col gap-3">
+                <div class="flex items-center justify-between pb-2 border-b border-white/10">
+                  <span class="font-label-md text-xs text-tertiary-fixed-dim font-bold">Visualisasi Memori Stack</span>
+                  <span class="font-label-md text-[11px] text-on-primary-container">Penunjuk Aktif: [TOP]</span>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row items-center justify-around gap-4 py-2">
+                  <div class="w-48 flex flex-col items-center">
+                    <span class="font-label-md text-xs text-tertiary-fixed-dim font-bold mb-1.5 flex items-center gap-1">
+                      <span class="material-symbols-outlined text-sm">arrow_downward</span> Posisi TOP
+                    </span>
+                    <div class="w-full border-2 border-dashed border-secondary rounded-lg p-2 flex flex-col gap-1.5 bg-surface-container-low/10">
+                      <div class="bg-secondary text-on-secondary py-1.5 rounded text-center font-label-md text-xs font-bold shadow-xs">
+                        Piring 3 (Terakhir Masuk)
+                      </div>
+                      <div class="bg-secondary/70 text-on-secondary py-1.5 rounded text-center font-label-md text-xs">
+                        Piring 2
+                      </div>
+                      <div class="bg-secondary/40 text-on-secondary py-1.5 rounded text-center font-label-md text-xs">
+                        Piring 1 (Pertama Masuk)
+                      </div>
+                    </div>
+                    <div class="w-full h-1.5 bg-outline-variant rounded-b mt-1"></div>
+                    <span class="font-label-md text-[10px] text-on-primary-container mt-1">Dasar Memori Tertutup</span>
+                  </div>
+
+                  <div class="flex flex-col gap-2 text-xs font-body-sm">
+                    <div class="flex items-start gap-2">
+                      <span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+                      <span><strong>PUSH:</strong> Menaruh elemen baru tepat di atas penunjuk TOP.</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                      <span class="material-symbols-outlined text-tertiary-fixed-dim text-base">check_circle</span>
+                      <span><strong>POP:</strong> Mengambil elemen yang sedang ditunjuk oleh TOP.</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                      <span class="material-symbols-outlined text-on-primary-container text-base">check_circle</span>
+                      <span><strong>PEEK:</strong> Mengintip data di posisi TOP tanpa menghapusnya.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <h3 id="stack-operasi" class="font-headline-md text-sm font-bold text-primary mt-2">
+                Tiga Operasi Pokok pada Stack
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col gap-1">
+                  <span class="font-label-md text-xs font-bold text-secondary">1. Push(x)</span>
+                  <p class="font-body-sm text-[11px] text-on-surface-variant">
+                    Menyisipkan nilai <code class="bg-surface-container px-1 py-0.5 rounded font-code-block">x</code> ke tumpukan. Posisi TOP naik 1 tingkat. Jika memori penuh, terjadi <em>Overflow</em>.
+                  </p>
+                </div>
+                <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col gap-1">
+                  <span class="font-label-md text-xs font-bold text-error">2. Pop()</span>
+                  <p class="font-body-sm text-[11px] text-on-surface-variant">
+                    Mengambil elemen paling atas. Posisi TOP turun 1 tingkat. Jika wadah kosong, terjadi <em>Underflow</em>.
+                  </p>
+                </div>
+                <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col gap-1">
+                  <span class="font-label-md text-xs font-bold text-primary">3. Peek() / Top()</span>
+                  <p class="font-body-sm text-[11px] text-on-surface-variant">
+                    Melihat nilai di puncak stack saat ini tanpa mengubah jumlah isi elemen memori.
+                  </p>
+                </div>
+              </div>
+
+              <h3 id="stack-analogi" class="font-headline-md text-sm font-bold text-primary mt-2">
+                Penerapan Nyata Stack di Bidang Teknologi Informasi
+              </h3>
+              <ul class="list-disc list-inside font-body-sm text-xs sm:text-sm text-on-surface space-y-1.5 leading-relaxed">
+                <li><strong>Tombol Back pada Web Browser:</strong> Setiap alamat URL yang kamu buka disimpan ke dalam stack riwayat halaman. Mengklik tombol Back akan melakukan <em>Pop</em> halaman sekarang untuk kembali ke halaman sebelumnya.</li>
+                <li><strong>Fitur Undo/Redo:</strong> Riwayat pengetikan disimpan dalam tumpukan aksi agar dapat dibatalkan sewaktu-waktu.</li>
+                <li><strong>Call Stack Fungsi Komputer:</strong> Menelusuri urutan pemanggilan fungsi dan proses rekursif di dalam memori RAM komputer.</li>
+              </ul>
+            </section>
+
+            <!-- BAB 3: QUEUE -->
+            <section id="queue-konsep" class="bg-surface-container-lowest rounded-xl p-5 sm:p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-4 scroll-mt-20">
+              <div class="flex items-center gap-2">
+                <span class="font-label-md text-xs font-bold text-tertiary-fixed-dim bg-tertiary-fixed px-2.5 py-0.5 rounded-full">
+                  BAB 03
+                </span>
+                <span class="font-label-md text-xs text-on-surface-variant font-semibold">Antrean Dua Pintu Terbuka</span>
+              </div>
+
+              <h2 class="font-headline-lg text-lg sm:text-xl font-bold text-primary">
+                Queue: Prinsip Layanan Adil FIFO (First In, First Out)
+              </h2>
+
+              <p class="font-body-md text-xs sm:text-sm text-on-surface leading-relaxed">
+                Berbeda dengan Stack yang hanya memiliki satu pintu keluar-masuk di bagian atas, <strong>Queue</strong> (antrean) memiliki <strong>dua ujung terbuka</strong> yang berbeda:
+              </p>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center gap-3">
+                  <span class="material-symbols-outlined text-secondary text-2xl">logout</span>
+                  <div>
+                    <h4 class="font-headline-md text-xs font-bold text-primary">FRONT (Depan / Kepala)</h4>
+                    <p class="font-body-sm text-[11px] text-on-surface-variant">Tempat elemen keluar setelah selesai dilayani (Dequeue).</p>
+                  </div>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center gap-3">
+                  <span class="material-symbols-outlined text-secondary text-2xl">login</span>
+                  <div>
+                    <h4 class="font-headline-md text-xs font-bold text-primary">REAR (Belakang / Ekor)</h4>
+                    <p class="font-body-sm text-[11px] text-on-surface-variant">Tempat elemen baru masuk mengantre (Enqueue).</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Visual Queue Horizontal Tube -->
+              <div class="p-4 rounded-xl bg-primary-container text-on-primary-container border border-outline-variant/40 flex flex-col gap-3">
+                <div class="flex items-center justify-between pb-2 border-b border-white/10">
+                  <span class="font-label-md text-xs text-tertiary-fixed-dim font-bold">Visualisasi Pipa Antrean Queue</span>
+                  <span class="font-label-md text-[11px] text-on-primary-container">Arah Aliran Data: Kanan ke Kiri</span>
+                </div>
+
+                <div class="flex items-center justify-between gap-2 py-3 overflow-x-auto">
+                  <div class="flex flex-col items-center shrink-0">
+                    <span class="font-label-md text-[10px] text-error font-bold flex items-center gap-0.5">
+                      <span class="material-symbols-outlined text-xs">logout</span> KELUAR
+                    </span>
+                    <span class="font-label-md text-xs text-tertiary-fixed-dim font-bold">[FRONT]</span>
+                  </div>
+
+                  <div class="flex-1 flex items-center justify-center gap-2 border-y-2 border-dashed border-tertiary-fixed-dim py-2.5 px-3 bg-surface-container-low/10 rounded">
+                    <div class="bg-tertiary-fixed-dim text-on-tertiary-fixed px-3 py-1.5 rounded font-label-md font-bold text-xs shadow-xs">
+                      Data 1 (Pertama)
+                    </div>
+                    <div class="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1.5 rounded font-label-md text-xs">
+                      Data 2
+                    </div>
+                    <div class="bg-tertiary-fixed/70 text-on-tertiary-fixed px-3 py-1.5 rounded font-label-md text-xs">
+                      Data 3 (Terakhir)
+                    </div>
+                  </div>
+
+                  <div class="flex flex-col items-center shrink-0">
+                    <span class="font-label-md text-[10px] text-secondary font-bold flex items-center gap-0.5">
+                      <span class="material-symbols-outlined text-xs">login</span> MASUK
+                    </span>
+                    <span class="font-label-md text-xs text-secondary font-bold">[REAR]</span>
+                  </div>
+                </div>
+              </div>
+
+              <h3 id="queue-operasi" class="font-headline-md text-sm font-bold text-primary mt-2">
+                Operasi Pokok pada Queue
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col gap-1">
+                  <span class="font-label-md text-xs font-bold text-secondary">1. Enqueue(x)</span>
+                  <p class="font-body-sm text-[11px] text-on-surface-variant">
+                    Menyisipkan elemen baru di posisi paling belakang (REAR). Penunjuk REAR bergeser maju.
+                  </p>
+                </div>
+                <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col gap-1">
+                  <span class="font-label-md text-xs font-bold text-error">2. Dequeue()</span>
+                  <p class="font-body-sm text-[11px] text-on-surface-variant">
+                    Mengeluarkan elemen paling depan (FRONT) untuk diproses. Penunjuk FRONT bergeser ke elemen berikutnya.
+                  </p>
+                </div>
+              </div>
+
+              <h3 id="queue-analogi" class="font-headline-md text-sm font-bold text-primary mt-2">
+                Penerapan Nyata Queue di Sistem Operasi &amp; Komputer
+              </h3>
+              <ul class="list-disc list-inside font-body-sm text-xs sm:text-sm text-on-surface space-y-1.5 leading-relaxed">
+                <li><strong>Printer Spooling:</strong> Dokumen yang kamu kirim ke mesin printer akan dicetak berurutan sesuai siapa yang pertama kali menekan tombol Print.</li>
+                <li><strong>Penjadwalan CPU (CPU Task Queue):</strong> Prosesor memproses tugas aplikasi menggunakan algoritma First Come First Served (FCFS) atau Round Robin berbasis antrean.</li>
+                <li><strong>Antrean Pesan Server (Message Broker):</strong> Memastikan pesan chat tidak hilang saat trafik pengguna sedang melonjak tinggi.</li>
+              </ul>
+            </section>
+
+            <!-- BAB 4: TABEL KOMPARASI -->
+            <section id="komparasi" class="bg-surface-container-lowest rounded-xl p-5 sm:p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-4 scroll-mt-20">
+              <div class="flex items-center gap-2">
+                <span class="font-label-md text-xs font-bold text-secondary bg-secondary-container px-2.5 py-0.5 rounded-full">
+                  BAB 04
+                </span>
+                <span class="font-label-md text-xs text-on-surface-variant font-semibold">Tabel Perbandingan Lengkap</span>
+              </div>
+
+              <h2 class="font-headline-lg text-lg sm:text-xl font-bold text-primary">
+                Perbandingan Head-to-Head: Stack vs Queue
+              </h2>
+
+              <div class="overflow-x-auto rounded-xl border border-outline-variant/40">
+                <table class="w-full text-left font-body-sm text-xs">
+                  <thead class="bg-surface-container font-headline-md text-on-surface text-[11px] uppercase tracking-wider border-b border-outline-variant/40">
+                    <tr>
+                      <th class="py-3 px-4">Parameter</th>
+                      <th class="py-3 px-4 text-secondary font-bold">Stack (Tumpukan)</th>
+                      <th class="py-3 px-4 text-tertiary-fixed-dim font-bold">Queue (Antrean)</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-outline-variant/30 text-on-surface">
+                    <tr class="hover:bg-surface-container-low transition-colors">
+                      <td class="py-2.5 px-4 font-bold text-primary">Prinsip Kerja</td>
+                      <td class="py-2.5 px-4 font-label-md font-semibold text-secondary">LIFO (Last In, First Out)</td>
+                      <td class="py-2.5 px-4 font-label-md font-semibold text-tertiary-fixed-dim">FIFO (First In, First Out)</td>
+                    </tr>
+                    <tr class="hover:bg-surface-container-low transition-colors">
+                      <td class="py-2.5 px-4 font-bold text-primary">Ujung Akses</td>
+                      <td class="py-2.5 px-4">Hanya 1 pintu di posisi puncak (TOP)</td>
+                      <td class="py-2.5 px-4">2 pintu: FRONT (Keluar) dan REAR (Masuk)</td>
+                    </tr>
+                    <tr class="hover:bg-surface-container-low transition-colors">
+                      <td class="py-2.5 px-4 font-bold text-primary">Operasi Masuk</td>
+                      <td class="py-2.5 px-4 font-code-block font-semibold">Push()</td>
+                      <td class="py-2.5 px-4 font-code-block font-semibold">Enqueue()</td>
+                    </tr>
+                    <tr class="hover:bg-surface-container-low transition-colors">
+                      <td class="py-2.5 px-4 font-bold text-primary">Operasi Keluar</td>
+                      <td class="py-2.5 px-4 font-code-block font-semibold">Pop()</td>
+                      <td class="py-2.5 px-4 font-code-block font-semibold">Dequeue()</td>
+                    </tr>
+                    <tr class="hover:bg-surface-container-low transition-colors">
+                      <td class="py-2.5 px-4 font-bold text-primary">Analogi Nyata</td>
+                      <td class="py-2.5 px-4">Tumpukan piring bersih, tumpukan buku</td>
+                      <td class="py-2.5 px-4">Antrean kasir toko, tiket bioskop</td>
+                    </tr>
+                    <tr class="hover:bg-surface-container-low transition-colors">
+                      <td class="py-2.5 px-4 font-bold text-primary">Kasus Utama</td>
+                      <td class="py-2.5 px-4">Undo/Redo, Browser Back, Call Stack</td>
+                      <td class="py-2.5 px-4">Antrean Printer, Penjadwalan CPU FCFS</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <!-- BAB 5: KESIMPULAN & AKSI LANJUT -->
+            <section id="ringkasan" class="bg-primary-container text-on-primary-container rounded-xl p-5 sm:p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-3 scroll-mt-20">
+              <span class="font-label-md text-xs text-tertiary-fixed-dim font-bold uppercase tracking-wider">BAB 05 &bull; Langkah Berikutnya</span>
+              <h2 class="font-headline-lg text-lg sm:text-xl font-bold text-white">
+                Siap Mencoba Simulasi Langsung di Laboratorium?
+              </h2>
+              <p class="font-body-md text-xs sm:text-sm text-on-primary-container leading-relaxed">
+                Pemahaman algoritma akan melekat kuat saat kamu menyaksikan sendiri proses perpindahan elemen di memori. Kunjungi Laboratorium Virtual untuk menjalankan simulasi Push/Pop dan Enqueue/Dequeue secara langsung!
+              </p>
+
+              <div class="flex flex-wrap items-center gap-3 pt-2">
+                <a href="laboratorium.html" class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-secondary text-on-secondary font-headline-md text-xs sm:text-sm font-semibold shadow hover:bg-secondary/90 transition">
+                  <span class="material-symbols-outlined text-base">science</span>
+                  <span>Buka Simulator Laboratorium</span>
+                </a>
+                <a href="kuis.html" class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-tertiary-fixed-dim text-on-tertiary-fixed font-headline-md text-xs sm:text-sm font-bold shadow hover:brightness-105 transition">
+                  <span class="material-symbols-outlined text-base">quiz</span>
+                  <span>Uji Pemahaman di Kuis</span>
+                </a>
+                <a href="tantangan.html" class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-surface-container-high text-primary font-headline-md text-xs sm:text-sm font-semibold hover:bg-surface-container-highest transition">
+                  <span class="material-symbols-outlined text-base">emoji_events</span>
+                  <span>Arena Tantangan</span>
+                </a>
+              </div>
+            </section>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Google Stitch Footer -->
+  <footer class="w-full bg-surface-container-lowest border-t border-outline-variant/40 mt-8 py-8 transition-colors">
+    <div class="w-[95vw] mx-auto px-2 sm:px-4 flex flex-col gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        
+        <div class="flex flex-col gap-2 md:col-span-1">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-secondary flex items-center justify-center text-on-secondary shadow-xs">
+              <span class="material-symbols-outlined text-base">account_tree</span>
+            </div>
+            <span class="font-headline-md text-base font-bold text-primary">Ruang Logika</span>
+          </div>
+          <p class="font-body-sm text-xs text-on-surface-variant max-w-sm leading-relaxed">
+            Platform Pembelajaran Interaktif Struktur Data &amp; Algoritma untuk Generasi Digital SMA.
+          </p>
+          <div class="flex items-center gap-2 mt-1">
+            <span class="font-label-md text-[11px] px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-semibold">
+              Edisi Siswa SMA Kelas X
+            </span>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <span class="font-headline-md text-sm font-semibold text-on-surface mb-1">Navigasi Cepat</span>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="index.html">Beranda</a>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="peta-belajar.html">Peta Belajar</a>
+          <a class="font-body-sm text-xs text-secondary font-bold" href="materi.html">Materi Pembelajaran</a>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="laboratorium.html">Laboratorium Virtual</a>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="tantangan.html">Studi Kasus</a>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="kuis.html">Uji Kompetensi</a>
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <span class="font-headline-md text-sm font-semibold text-on-surface mb-1">Fasilitas &amp; Peran</span>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="dashboard-siswa.html">Dashboard Siswa</a>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="dashboard-guru.html">Pemantauan Guru</a>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="dashboard-admin.html">Tata Kelola Admin</a>
+          <a class="font-body-sm text-xs text-on-surface-variant hover:text-secondary transition-colors" href="login.html">Portal Akses Akun</a>
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <span class="font-headline-md text-sm font-semibold text-on-surface mb-1">Pengembang &amp; Hak Cipta</span>
+          <div class="p-3 rounded-lg bg-surface-container border border-outline-variant/60 flex flex-col gap-1">
+            <span class="font-label-md text-[11px] text-on-surface-variant">Penanggung Jawab Sistem:</span>
+            <span class="font-headline-md text-xs font-bold text-primary">Pengembang: Yusuf Nurul Huda</span>
+            <span class="font-body-sm text-[11px] text-on-surface-variant mt-0.5">Spesialisasi Kurikulum Informatika SMA &amp; Media Interaktif Algoritma.</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="border-t border-outline-variant/40 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <p class="font-body-sm text-xs text-on-surface-variant text-center sm:text-left">
+          &copy; 2025 Ruang Logika. Hak Cipta Dilindungi Undang-Undang. Pengembang: Yusuf Nurul Huda
+        </p>
+        <div class="flex items-center gap-4">
+          <span class="font-label-md text-xs text-on-surface-variant font-medium">SMA Kelas X &bull; Informatika</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Module Scripts -->
+</body>
+</html>
