@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Dashboard Administrator — Ruang Logika | Pusat Kendali Sistem</title>
+  <meta name="description" content="Dashboard Administrator Ruang Logika: tata kelola pengguna (users), pemantauan skema database Cloud Firestore, dan audit sistem. Pengembang: Yusuf Nurul Huda."/>
+  <meta property="og:title" content="Dashboard Administrator — Ruang Logika"/>
+  <meta property="og:description" content="Dashboard Administrator Ruang Logika. Pengembang: Yusuf Nurul Huda."/>
+  <meta property="og:type" content="website"/>
+
+  <!-- Google Typography & Material Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/responsive.css"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-high": "#e6e8eb",
+            "primary-container": "#17324d",
+            "on-primary-container": "#819aba",
+            "surface-bright": "#f7f9fc",
+            "on-secondary": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "outline": "#74777e",
+            "on-surface-variant": "#43474d",
+            "primary": "#001d36",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6",
+            "on-error": "#ffffff",
+            "on-background": "#191c1e",
+            "tertiary-fixed": "#ffdea7",
+            "tertiary-fixed-dim": "#f8bd45",
+            "on-tertiary-fixed": "#271900",
+            "on-secondary-fixed": "#00201d",
+            "on-surface": "#191c1e",
+            "inverse-surface": "#2d3133",
+            "tertiary": "#271900",
+            "on-primary-fixed": "#001d36",
+            "surface-container-lowest": "#ffffff",
+            "secondary-container": "#82f6e7",
+            "tertiary-container": "#422d00",
+            "surface-tint": "#47607e",
+            "primary-fixed-dim": "#afc9ea",
+            "surface": "#f7f9fc",
+            "on-secondary-container": "#007167",
+            "surface-container-low": "#f2f4f7",
+            "surface-variant": "#e0e3e6",
+            "secondary": "#006a61",
+            "surface-container-highest": "#e0e3e6",
+            "on-primary": "#ffffff",
+            "surface-container": "#eceef1",
+            "background": "#f7f9fc"
+          },
+          fontFamily: {
+            "headline-xl": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "display-lg": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-lg": ["JetBrains Mono"],
+            "label-md": ["JetBrains Mono"],
+            "code-block": ["JetBrains Mono"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body id="admin-dashboard-root" class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col">
+  
+  <!-- Fixed Topbar (Header) with Dynamic Greeting -->
+  <header class="fixed top-0 left-0 right-0 h-16 bg-surface-container-lowest/95 backdrop-blur-md z-40 border-b border-outline-variant/40 flex items-center justify-between px-4 lg:px-6">
+    <div class="flex items-center gap-3">
+      <!-- Mobile Sidebar Toggle -->
+      <button id="btn-toggle-sidebar" type="button" aria-label="Buka Menu Navigasi" class="lg:hidden p-2 rounded-xl text-primary hover:bg-surface-container transition cursor-pointer">
+        <span class="material-symbols-outlined text-2xl">menu</span>
+      </button>
+
+      <!-- Logo & App Title -->
+      <a class="flex items-center gap-2.5" href="index.html">
+        <div class="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center text-on-secondary shadow-sm">
+          <span class="material-symbols-outlined text-xl">account_tree</span>
+        </div>
+        <span class="font-headline-md text-lg font-bold tracking-tight text-primary">Ruang Logika</span>
+      </a>
+    </div>
+
+    <!-- Topbar Right: Dynamic Admin Greeting & Role Badge -->
+    <div class="flex items-center gap-3 sm:gap-4">
+      <!-- Role Badge -->
+      <div class="hidden sm:flex items-center gap-1.5 bg-purple-100 text-purple-800 px-3 py-1 rounded-full border border-purple-200">
+        <span class="material-symbols-outlined text-sm text-purple-700">shield_person</span>
+        <span class="font-label-md text-xs font-bold">Super Admin</span>
+      </div>
+
+      <!-- Sapaan Admin Dinamis -->
+      <div class="flex items-center gap-2.5 pl-2 sm:border-l border-outline-variant/40">
+        <div class="w-8 h-8 rounded-full bg-purple-600 text-white font-code-block font-bold text-xs flex items-center justify-center shadow-xs">
+          <span class="material-symbols-outlined text-base">security</span>
+        </div>
+        <div class="hidden md:flex flex-col text-left">
+          <span class="font-headline-md text-xs font-bold text-primary leading-tight">
+            Admin: <span class="user-display-name">Yusuf Nurul Huda</span>
+          </span>
+          <span class="font-label-md text-[10px] text-on-surface-variant">Lead Developer</span>
+        </div>
+      </div>
+
+      <!-- Quick Logout Button -->
+      <button id="btn-logout" type="button" class="flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface hover:text-error hover:bg-error-container/20 rounded-xl font-headline-md text-xs font-semibold transition cursor-pointer">
+        <span class="material-symbols-outlined text-base">logout</span>
+        <span class="hidden sm:inline">Keluar</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Backdrop Overlay for Mobile Sidebar -->
+  <div id="sidebar-overlay" class="fixed inset-0 z-40 bg-primary/40 backdrop-blur-xs hidden lg:hidden transition-opacity"></div>
+
+  <!-- Main Container: Role-Based Sidebar + Workspace -->
+  <div class="pt-16 flex flex-1 w-full min-h-[calc(100vh-4rem)]">
+    
+    <!-- ROLE-BASED SIDEBAR (ADMIN) -->
+    <!-- STRICT CONSTRAINT: Sidebar memuat menu: Dashboard, Kelola Pengguna (Users), Status Firestore, dan Logout -->
+    <aside id="dashboard-sidebar" class="fixed lg:static top-16 bottom-0 left-0 w-64 bg-surface-container-lowest border-r border-outline-variant/40 z-50 flex flex-col justify-between p-4 -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out shrink-0">
+      
+      <div class="flex flex-col gap-5">
+        <!-- Sidebar Profile Card -->
+        <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-purple-600 flex items-center justify-center text-white font-code-block font-bold text-sm shadow-xs">
+            AD
+          </div>
+          <div class="flex flex-col min-w-0">
+            <span class="font-headline-md text-xs font-bold text-primary truncate user-display-name">Yusuf Nurul Huda</span>
+            <span class="font-label-md text-[10px] text-purple-700 font-semibold">Administrator Lab</span>
+          </div>
+        </div>
+
+        <!-- Section Label -->
+        <div class="px-2">
+          <span class="font-label-md text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Navigasi Admin</span>
+        </div>
+
+        <!-- 4 Menu Admin Saja (Single-Page Tab Switching) -->
+        <nav class="flex flex-col gap-1.5" id="admin-sidebar-nav">
+          
+          <!-- 1. Dashboard (Active by default) -->
+          <button type="button" data-tab-target="tab-dashboard" class="sidebar-tab-btn active flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-primary-container text-on-primary-container font-headline-md text-xs font-bold shadow-sm transition text-left cursor-pointer w-full">
+            <span class="material-symbols-outlined text-lg text-secondary">admin_panel_settings</span>
+            <span>Dashboard</span>
+          </button>
+
+          <!-- 2. Kelola Pengguna (Users) -->
+          <button type="button" data-tab-target="tab-kelola-pengguna" class="sidebar-tab-btn flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-headline-md text-xs font-semibold transition text-left cursor-pointer w-full">
+            <span class="material-symbols-outlined text-lg">group</span>
+            <span>Kelola Pengguna (Users)</span>
+          </button>
+
+          <!-- 3. Status Firestore -->
+          <button type="button" data-tab-target="tab-status-firestore" class="sidebar-tab-btn flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-headline-md text-xs font-semibold transition text-left cursor-pointer w-full">
+            <span class="material-symbols-outlined text-lg">dns</span>
+            <span>Status Firestore</span>
+          </button>
+
+        </nav>
+      </div>
+
+      <!-- 4. Logout Menu di Bawah Sidebar -->
+      <div class="pt-4 border-t border-outline-variant/40 flex flex-col gap-2">
+        <button type="button" class="btn-logout-action w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-error hover:bg-error-container/20 font-headline-md text-xs font-bold transition cursor-pointer">
+          <span class="material-symbols-outlined text-lg">logout</span>
+          <span>Logout</span>
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- MAIN DASHBOARD CONTENT AREA -->
+    <main class="flex-1 p-4 lg:p-7 overflow-y-auto">
+      <div class="max-w-7xl mx-auto flex flex-col gap-6">
+        
+        <!-- TAB 1: DASHBOARD OVERVIEW (DEFAULT VISIBLE) -->
+        <div id="tab-dashboard" class="tab-pane active-tab flex flex-col gap-6 w-full">
+          
+          <!-- Header Banner Card (Stitch Style) -->
+          <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/30">
+            <div class="flex flex-col">
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-primary text-tertiary-fixed-dim">
+                  <span class="material-symbols-outlined text-base">admin_panel_settings</span>
+                </span>
+                <span class="font-label-md text-xs uppercase tracking-wider text-secondary font-bold">Pusat Kendali Sistem</span>
+                <div id="admin-db-status" class="ml-2">
+                  <!-- Status koneksi Firestore oleh js/db.js -->
+                </div>
+              </div>
+              <h1 class="font-headline-xl text-xl sm:text-2xl text-primary tracking-tight mt-1.5 font-bold">
+                Administrator Sistem: <span id="admin-name" class="text-secondary user-display-name">Yusuf Nurul Huda</span>
+              </h1>
+              <p class="font-body-sm text-xs sm:text-sm text-on-surface-variant max-w-2xl mt-0.5">
+                Kendali manajemen akun pengguna, sinkronisasi koleksi Firestore (koleksi <code>users</code> &amp; <code>progress</code>), dan pemantauan integritas data platform Ruang Logika.
+              </p>
+            </div>
+
+            <div class="flex items-center gap-3 shrink-0">
+              <a href="dashboard-siswa.html" class="flex items-center gap-1.5 px-3.5 py-2 bg-surface-container-high text-primary rounded-xl font-headline-md text-xs font-semibold hover:bg-surface-container-highest transition">
+                <span class="material-symbols-outlined text-sm">visibility</span>
+                <span>Mode Siswa</span>
+              </a>
+              <a href="dashboard-guru.html" class="flex items-center gap-1.5 px-3.5 py-2 bg-surface-container-high text-primary rounded-xl font-headline-md text-xs font-semibold hover:bg-surface-container-highest transition">
+                <span class="material-symbols-outlined text-sm">visibility</span>
+                <span>Mode Guru</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- STATS OVERVIEW CARDS (Stitch Bento) -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <div class="bg-surface-container-lowest rounded-2xl p-4 sm:p-5 shadow-sm border border-outline-variant/30 flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-2xl">manage_accounts</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-wider">Total Akun Terdaftar</span>
+                <span id="admin-stat-total-users" class="font-code-block text-2xl font-bold text-primary mt-0.5">6 Akun</span>
+              </div>
+            </div>
+
+            <div class="bg-surface-container-lowest rounded-2xl p-4 sm:p-5 shadow-sm border border-outline-variant/30 flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-2xl">quiz</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-wider">Sesi Kuis Selesai</span>
+                <span id="admin-stat-total-quizzes" class="font-code-block text-2xl font-bold text-primary mt-0.5">6 Dokumen</span>
+              </div>
+            </div>
+
+            <div class="bg-surface-container-lowest rounded-2xl p-4 sm:p-5 shadow-sm border border-outline-variant/30 flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-2xl">speed</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-wider">Latensi Cloud Firestore</span>
+                <span class="font-code-block text-2xl font-bold text-emerald-700 mt-0.5">24 ms</span>
+              </div>
+            </div>
+
+            <div class="bg-surface-container-lowest rounded-2xl p-4 sm:p-5 shadow-sm border border-outline-variant/30 flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-2xl">lock</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-wider">Aturan Keamanan (Rules)</span>
+                <span class="font-code-block text-2xl font-bold text-secondary mt-0.5">RBAC Aktif</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bento Quick Links for Fast Jump -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 flex items-center justify-between hover:border-secondary transition shadow-sm">
+              <div class="flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-xl">group</span>
+                </div>
+                <div>
+                  <h4 class="font-headline-md text-sm font-bold text-primary">Kelola Pengguna Sistem</h4>
+                  <p class="font-body-sm text-xs text-on-surface-variant">Daftar akun siswa, guru, dan admin terdaftar di Firestore.</p>
+                </div>
+              </div>
+              <button type="button" data-tab-target="tab-kelola-pengguna" class="px-3 py-1.5 rounded-lg bg-surface-container-high text-primary hover:bg-secondary hover:text-white font-headline-md text-xs font-semibold transition cursor-pointer">
+                Buka
+              </button>
+            </div>
+
+            <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 flex items-center justify-between hover:border-secondary transition shadow-sm">
+              <div class="flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center">
+                  <span class="material-symbols-outlined text-xl">dns</span>
+                </div>
+                <div>
+                  <h4 class="font-headline-md text-sm font-bold text-primary">Status Skema Firestore</h4>
+                  <p class="font-body-sm text-xs text-on-surface-variant">Inspeksi skema koleksi users &amp; progress serta integritas data.</p>
+                </div>
+              </div>
+              <button type="button" data-tab-target="tab-status-firestore" class="px-3 py-1.5 rounded-lg bg-surface-container-high text-primary hover:bg-secondary hover:text-white font-headline-md text-xs font-semibold transition cursor-pointer">
+                Buka
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TAB 2: KELOLA PENGGUNA (USERS) -->
+        <div id="tab-kelola-pengguna" class="tab-pane hidden flex flex-col gap-6 w-full">
+          <section id="kelola-pengguna-section" class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-outline-variant/30">
+              <div class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-secondary text-2xl">group</span>
+                <div>
+                  <h2 class="font-headline-lg text-lg font-bold text-primary">Kelola Pengguna (Users Firestore)</h2>
+                  <p class="font-body-sm text-xs text-on-surface-variant">Daftar akun siswa, pengajar, dan administrator yang tersimpan di Cloud Firestore koleksi <code>users</code>.</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <span class="font-label-md text-xs px-2.5 py-1 rounded-lg bg-surface-container-low text-on-surface-variant font-medium">Koleksi: /users</span>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-outline-variant/30 text-on-surface-variant font-label-md text-[11px] uppercase tracking-wider">
+                    <th class="py-3 px-4">No</th>
+                    <th class="py-3 px-4">Nama Lengkap</th>
+                    <th class="py-3 px-4">Alamat Email</th>
+                    <th class="py-3 px-4">Peran (Role)</th>
+                    <th class="py-3 px-4">Waktu Pendaftaran</th>
+                    <th class="py-3 px-4">Status Sesi</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-users-tbody">
+                  <!-- Diisi otomatis oleh js/db.js -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+        <!-- TAB 3: STATUS FIRESTORE -->
+        <div id="tab-status-firestore" class="tab-pane hidden flex flex-col gap-6 w-full">
+          <section id="status-firestore-section" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Schema & Koleksi Status -->
+            <div class="lg:col-span-7 bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-4">
+              <div class="flex items-center gap-2.5 pb-3 border-b border-outline-variant/30">
+                <span class="material-symbols-outlined text-secondary text-xl">dns</span>
+                <h3 class="font-headline-lg text-base sm:text-lg font-bold text-primary">Status Skema Koleksi Cloud Firestore</h3>
+              </div>
+
+              <div class="flex flex-col gap-3 text-xs leading-relaxed">
+                <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-start justify-between gap-3">
+                  <div class="flex flex-col">
+                    <span class="font-headline-md font-bold text-primary text-xs flex items-center gap-1.5 font-code-block">
+                      <span class="material-symbols-outlined text-secondary text-sm">folder</span>
+                      collection("users")
+                    </span>
+                    <span class="font-body-sm text-[11px] text-on-surface-variant mt-1">
+                      Menyimpan profil pengguna: <code>uid</code>, <code>namaLengkap</code>, <code>email</code>, <code>role (siswa|guru|admin)</code>, <code>kelas</code>, <code>xp</code>, dan <code>level</code>.
+                    </span>
+                  </div>
+                  <span class="font-label-md text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold shrink-0">Siap</span>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-start justify-between gap-3">
+                  <div class="flex flex-col">
+                    <span class="font-headline-md font-bold text-primary text-xs flex items-center gap-1.5 font-code-block">
+                      <span class="material-symbols-outlined text-secondary text-sm">folder</span>
+                      collection("progress")
+                    </span>
+                    <span class="font-body-sm text-[11px] text-on-surface-variant mt-1">
+                      Menyimpan rekap evaluasi: <code>userId</code>, <code>score</code>, <code>quizTitle</code>, <code>timeSpentSeconds</code>, <code>passed</code>, dan <code>timestamp</code>.
+                    </span>
+                  </div>
+                  <span class="font-label-md text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold shrink-0">Siap</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Audit Keamanan & GitHub Pages Serverless -->
+            <div class="lg:col-span-5 bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-4">
+              <div class="flex items-center gap-2 pb-3 border-b border-outline-variant/30">
+                <span class="material-symbols-outlined text-purple-600 text-xl">verified_user</span>
+                <h3 class="font-headline-md text-sm font-bold text-primary">Integritas Arsitektur Serverless</h3>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-primary-container text-on-primary-container border border-outline-variant/40 flex flex-col gap-2">
+                <span class="font-label-md text-[10px] text-tertiary-fixed-dim uppercase tracking-wider font-bold">Hosting Target: GitHub Pages</span>
+                <p class="font-body-sm text-xs leading-relaxed text-on-primary-container/90">
+                  Aplikasi ini sepenuhnya <strong>Serverless</strong> (HTML5, CSS3, Vanilla JS Modular). Semua autentikasi dan penyimpanan data dilakukan melalui Client-Side SDK Firebase v9+.
+                </p>
+                <div class="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] font-code-block">
+                  <span>SDK: Firebase v10.12.0</span>
+                  <span class="text-secondary font-bold">Murni Client-Side</span>
+                </div>
+              </div>
+            </div>
+
+          </section>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Google Stitch Footer -->
+  <footer class="w-full bg-surface-container-lowest border-t border-outline-variant/40 py-6 transition-colors">
+    <div class="w-[95vw] mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-on-surface-variant">
+      <div class="flex items-center gap-2">
+        <span class="font-headline-md font-bold text-primary">Ruang Logika</span>
+        <span>&bull;</span>
+        <span>Pusat Tata Kelola &amp; Administrasi Sistem</span>
+      </div>
+      <div>
+        <strong>Pengembang: Yusuf Nurul Huda</strong>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/db.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

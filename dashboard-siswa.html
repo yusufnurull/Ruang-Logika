@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Dashboard Siswa — Ruang Logika | Portal Pembelajaran &amp; Capaian</title>
+  <meta name="description" content="Dashboard Siswa Ruang Logika: pemantauan skor kuis, peta progres belajar, sertifikat digital kelulusan. Pengembang: Yusuf Nurul Huda."/>
+  <meta property="og:title" content="Dashboard Siswa — Ruang Logika"/>
+  <meta property="og:description" content="Dashboard Pembelajaran Siswa Ruang Logika. Pengembang: Yusuf Nurul Huda."/>
+  <meta property="og:type" content="website"/>
+
+  <!-- Google Typography & Material Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/responsive.css"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-high": "#e6e8eb",
+            "primary-container": "#17324d",
+            "on-primary-container": "#819aba",
+            "surface-bright": "#f7f9fc",
+            "on-secondary": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "outline": "#74777e",
+            "on-surface-variant": "#43474d",
+            "primary": "#001d36",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6",
+            "on-error": "#ffffff",
+            "on-background": "#191c1e",
+            "tertiary-fixed": "#ffdea7",
+            "tertiary-fixed-dim": "#f8bd45",
+            "on-tertiary-fixed": "#271900",
+            "on-secondary-fixed": "#00201d",
+            "on-surface": "#191c1e",
+            "inverse-surface": "#2d3133",
+            "tertiary": "#271900",
+            "on-primary-fixed": "#001d36",
+            "surface-container-lowest": "#ffffff",
+            "secondary-container": "#82f6e7",
+            "tertiary-container": "#422d00",
+            "surface-tint": "#47607e",
+            "primary-fixed-dim": "#afc9ea",
+            "surface": "#f7f9fc",
+            "on-secondary-container": "#007167",
+            "surface-container-low": "#f2f4f7",
+            "surface-variant": "#e0e3e6",
+            "secondary": "#006a61",
+            "surface-container-highest": "#e0e3e6",
+            "on-primary": "#ffffff",
+            "surface-container": "#eceef1",
+            "background": "#f7f9fc"
+          },
+          fontFamily: {
+            "headline-xl": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "display-lg": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-lg": ["JetBrains Mono"],
+            "label-md": ["JetBrains Mono"],
+            "code-block": ["JetBrains Mono"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body id="student-dashboard-root" class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col">
+  
+  <!-- Fixed Topbar (Header) with Dynamic Greeting -->
+  <header class="fixed top-0 left-0 right-0 h-16 bg-surface-container-lowest/95 backdrop-blur-md z-40 border-b border-outline-variant/40 flex items-center justify-between px-4 lg:px-6">
+    <div class="flex items-center gap-3">
+      <!-- Mobile Sidebar Toggle -->
+      <button id="btn-toggle-sidebar" type="button" aria-label="Buka Menu Navigasi" class="lg:hidden p-2 rounded-xl text-primary hover:bg-surface-container transition cursor-pointer">
+        <span class="material-symbols-outlined text-2xl">menu</span>
+      </button>
+
+      <!-- Logo & App Title -->
+      <a class="flex items-center gap-2.5" href="index.html">
+        <div class="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center text-on-secondary shadow-sm">
+          <span class="material-symbols-outlined text-xl">account_tree</span>
+        </div>
+        <span class="font-headline-md text-lg font-bold tracking-tight text-primary">Ruang Logika</span>
+      </a>
+    </div>
+
+    <!-- Topbar Right: Dynamic User Greeting & Role Badge -->
+    <div class="flex items-center gap-3 sm:gap-4">
+      <!-- Role Badge -->
+      <div class="hidden sm:flex items-center gap-1.5 bg-secondary-container/50 text-on-secondary-container px-3 py-1 rounded-full border border-secondary/20">
+        <span class="material-symbols-outlined text-sm text-secondary">school</span>
+        <span id="student-role-badge" class="font-label-md text-xs font-bold">Siswa Aktif</span>
+      </div>
+
+      <!-- Sapaan Pengguna Dinamis -->
+      <div class="flex items-center gap-2.5 pl-2 sm:border-l border-outline-variant/40">
+        <div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container font-code-block font-bold text-xs flex items-center justify-center shadow-xs">
+          <span class="material-symbols-outlined text-base">person</span>
+        </div>
+        <div class="hidden md:flex flex-col text-left">
+          <span class="font-headline-md text-xs font-bold text-primary leading-tight">
+            Halo, <span class="user-display-name">Farhan Ardiansyah</span>
+          </span>
+          <span class="font-label-md text-[10px] text-on-surface-variant">Siswa Terdaftar</span>
+        </div>
+      </div>
+
+      <!-- Quick Logout Button -->
+      <button id="btn-logout" type="button" class="flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface hover:text-error hover:bg-error-container/20 rounded-xl font-headline-md text-xs font-semibold transition cursor-pointer">
+        <span class="material-symbols-outlined text-base">logout</span>
+        <span class="hidden sm:inline">Keluar</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Backdrop Overlay for Mobile Sidebar -->
+  <div id="sidebar-overlay" class="fixed inset-0 z-40 bg-primary/40 backdrop-blur-xs hidden lg:hidden transition-opacity"></div>
+
+  <!-- Main Container: Role-Based Sidebar + Scrollable Workspace -->
+  <div class="pt-16 flex flex-1 w-full min-h-[calc(100vh-4rem)]">
+    
+    <!-- ROLE-BASED SIDEBAR (SISWA) -->
+    <!-- STRICT CONSTRAINT: HANYA Dashboard, Peta Belajar, Materi, Lab Interaktif, Tantangan, Kuis, Sertifikat Saya, dan Logout -->
+    <!-- Sembunyikan menu Users dan Settings! -->
+    <aside id="dashboard-sidebar" class="fixed lg:static top-16 bottom-0 left-0 w-64 bg-surface-container-lowest border-r border-outline-variant/40 z-50 flex flex-col justify-between p-4 -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out shrink-0">
+      
+      <div class="flex flex-col gap-5">
+        <!-- Sidebar Profile Card -->
+        <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-on-secondary font-code-block font-bold text-sm shadow-xs">
+            RL
+          </div>
+          <div class="flex flex-col min-w-0">
+            <span class="font-headline-md text-xs font-bold text-primary truncate user-display-name">Farhan Ardiansyah</span>
+            <span class="font-label-md text-[10px] text-secondary font-semibold">Siswa &bull; Modul LIFO/FIFO</span>
+          </div>
+        </div>
+
+        <!-- Section Label -->
+        <div class="px-2">
+          <span class="font-label-md text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Navigasi Siswa</span>
+        </div>
+
+        <!-- 8 Menu Siswa yang Relevan Saja -->
+        <nav class="flex flex-col gap-1.5">
+          
+          <!-- 1. Dashboard (Active) -->
+          <a href="dashboard-siswa.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-primary-container text-on-primary-container font-headline-md text-xs font-bold shadow-sm transition">
+            <span class="material-symbols-outlined text-lg text-secondary">dashboard</span>
+            <span>Dashboard</span>
+          </a>
+
+          <!-- 2. Peta Belajar -->
+          <a href="peta-belajar.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-headline-md text-xs font-semibold transition">
+            <span class="material-symbols-outlined text-lg text-on-surface-variant">alt_route</span>
+            <span>Peta Belajar</span>
+          </a>
+
+          <!-- 3. Materi Pembelajaran -->
+          <a href="materi.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-headline-md text-xs font-semibold transition">
+            <span class="material-symbols-outlined text-lg text-on-surface-variant">menu_book</span>
+            <span>Materi</span>
+          </a>
+
+          <!-- 4. Lab Interaktif -->
+          <a href="laboratorium.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-headline-md text-xs font-semibold transition">
+            <span class="material-symbols-outlined text-lg text-on-surface-variant">science</span>
+            <span>Lab Interaktif</span>
+          </a>
+
+          <!-- 5. Tantangan Kasus -->
+          <a href="tantangan.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-headline-md text-xs font-semibold transition">
+            <span class="material-symbols-outlined text-lg text-on-surface-variant">psychology</span>
+            <span>Tantangan</span>
+          </a>
+
+          <!-- 6. Kuis & Evaluasi -->
+          <a href="kuis.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-headline-md text-xs font-semibold transition">
+            <span class="material-symbols-outlined text-lg text-on-surface-variant">quiz</span>
+            <span>Kuis</span>
+          </a>
+
+          <!-- 7. Sertifikat Saya -->
+          <a href="#sertifikat-section" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-headline-md text-xs font-semibold transition">
+            <span class="material-symbols-outlined text-lg text-tertiary-fixed-dim">workspace_premium</span>
+            <span>Sertifikat Saya</span>
+          </a>
+
+        </nav>
+      </div>
+
+      <!-- 8. Logout Menu di Bawah Sidebar -->
+      <div class="pt-4 border-t border-outline-variant/40 flex flex-col gap-2">
+        <button type="button" class="btn-logout-action w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-error hover:bg-error-container/20 font-headline-md text-xs font-bold transition cursor-pointer">
+          <span class="material-symbols-outlined text-lg">logout</span>
+          <span>Logout</span>
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- MAIN DASHBOARD CONTENT AREA -->
+    <main class="flex-1 p-4 lg:p-7 overflow-y-auto">
+      <div class="max-w-7xl mx-auto flex flex-col gap-6">
+        
+        <!-- Welcome Hero Banner -->
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/30">
+          <div class="flex flex-col">
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-secondary text-on-secondary">
+                <span class="material-symbols-outlined text-base">person</span>
+              </span>
+              <span class="font-label-md text-xs uppercase tracking-wider text-secondary font-bold">Portal Capaian Siswa</span>
+            </div>
+            <h1 class="font-headline-xl text-xl sm:text-2xl text-primary tracking-tight mt-1.5 font-bold">
+              Halo, <span id="student-greeting-name" class="text-secondary user-display-name">Farhan Ardiansyah</span>! 👋
+            </h1>
+            <p class="font-body-sm text-xs sm:text-sm text-on-surface-variant max-w-2xl mt-0.5">
+              Selamat datang kembali di Ruang Logika. Terus tingkatkan pemahaman mekanis Stack &amp; Queue melalui praktikum lab, selesaikan tantangan kasus, dan amankan sertifikat kompetensimu!
+            </p>
+          </div>
+
+          <div class="flex items-center gap-3 shrink-0">
+            <a href="laboratorium.html" class="flex items-center gap-1.5 px-4 py-2.5 bg-secondary text-on-secondary rounded-xl font-headline-md text-xs sm:text-sm font-bold hover:bg-secondary/90 shadow-sm transition">
+              <span class="material-symbols-outlined text-base">science</span>
+              <span>Buka Lab Virtual</span>
+            </a>
+            <a href="kuis.html" class="flex items-center gap-1.5 px-4 py-2.5 bg-primary text-on-primary rounded-xl font-headline-md text-xs sm:text-sm font-bold hover:bg-primary/90 shadow-sm transition">
+              <span class="material-symbols-outlined text-base">quiz</span>
+              <span>Uji Kuis</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 4 BENTO STATS CARDS -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <div class="bg-surface-container-lowest rounded-2xl p-4 sm:p-5 shadow-sm border border-outline-variant/30 flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-2xl">military_tech</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-wider">Skor Tertinggi</span>
+              <span id="student-stat-highest" class="font-code-block text-2xl font-bold text-primary mt-0.5">100</span>
+            </div>
+          </div>
+
+          <div class="bg-surface-container-lowest rounded-2xl p-4 sm:p-5 shadow-sm border border-outline-variant/30 flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-2xl">analytics</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-wider">Rata-Rata Nilai</span>
+              <span id="student-stat-average" class="font-code-block text-2xl font-bold text-primary mt-0.5">85</span>
+            </div>
+          </div>
+
+          <div class="bg-surface-container-lowest rounded-2xl p-4 sm:p-5 shadow-sm border border-outline-variant/30 flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-surface-container-high text-primary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-2xl">task_alt</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-wider">Kuis Selesai</span>
+              <span id="student-stat-quizzes" class="font-code-block text-2xl font-bold text-primary mt-0.5">3 Sesi</span>
+            </div>
+          </div>
+
+          <div class="bg-surface-container-lowest rounded-2xl p-4 sm:p-5 shadow-sm border border-outline-variant/30 flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-2xl">bolt</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-wider">Total XP Belajar</span>
+              <span id="student-stat-xp" class="font-code-block text-2xl font-bold text-secondary mt-0.5">+250 XP</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 2-COLUMN MAIN BENTO GRID -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <!-- Kolom Kiri: Tabel Riwayat Nilai Kuis (Firestore) -->
+          <div class="lg:col-span-8 bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-4">
+            <div class="flex items-center justify-between pb-3 border-b border-outline-variant/30">
+              <div class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-secondary text-xl">history_edu</span>
+                <h2 class="font-headline-lg text-base sm:text-lg font-bold text-primary">Riwayat Evaluasi &amp; Kuis</h2>
+              </div>
+              <a href="kuis.html" class="font-label-md text-xs text-secondary hover:underline flex items-center gap-1 font-semibold">
+                <span>Kerjakan Kuis Baru</span>
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+              </a>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-outline-variant/30 text-on-surface-variant font-label-md text-[11px] uppercase tracking-wider">
+                    <th class="py-3 px-4">No</th>
+                    <th class="py-3 px-4">Topik Uji</th>
+                    <th class="py-3 px-4">Tanggal Pengerjaan</th>
+                    <th class="py-3 px-4">Perolehan Skor</th>
+                    <th class="py-3 px-4">Status Capaian</th>
+                  </tr>
+                </thead>
+                <tbody id="student-history-tbody">
+                  <!-- Populated by js/db.js -->
+                  <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors text-xs">
+                    <td class="py-3.5 px-4 font-mono font-bold text-slate-400">1</td>
+                    <td class="py-3.5 px-4 font-medium text-slate-800">Evaluasi Pemahaman Stack &amp; Queue</td>
+                    <td class="py-3.5 px-4 font-mono text-slate-500">10 Mei 2025, 08:30</td>
+                    <td class="py-3.5 px-4 font-mono font-bold text-emerald-700 text-sm">100 / 100</td>
+                    <td class="py-3.5 px-4">
+                      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                        <span class="material-symbols-outlined text-xs">check_circle</span> Kompeten
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Kolom Kanan: Target Pembelajaran & Checklist Penguasaan -->
+          <div class="lg:col-span-4 flex flex-col gap-5">
+            
+            <div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-outline-variant/30 flex flex-col gap-4">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-lg">fact_check</span>
+                <h3 class="font-headline-md text-sm font-bold text-primary">Capaian Kompetensi Linear</h3>
+              </div>
+
+              <div class="flex flex-col gap-2.5">
+                <div class="p-3 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center justify-between text-xs">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+                    <span class="font-medium text-primary">Konsep Stack (LIFO)</span>
+                  </div>
+                  <span class="font-label-md text-[10px] text-secondary font-bold">100% Paham</span>
+                </div>
+
+                <div class="p-3 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center justify-between text-xs">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+                    <span class="font-medium text-primary">Konsep Queue (FIFO)</span>
+                  </div>
+                  <span class="font-label-md text-[10px] text-secondary font-bold">100% Paham</span>
+                </div>
+
+                <div class="p-3 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center justify-between text-xs">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+                    <span class="font-medium text-primary">Simulasi Virtual Lab</span>
+                  </div>
+                  <span class="font-label-md text-[10px] text-secondary font-bold">Selesai</span>
+                </div>
+
+                <div class="p-3 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center justify-between text-xs">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+                    <span class="font-medium text-primary">Studi Kasus Antrean &amp; Undo</span>
+                  </div>
+                  <span class="font-label-md text-[10px] text-secondary font-bold">Aktif</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Kartu Akses Cepat Lab -->
+            <div class="bg-primary-container text-on-primary-container rounded-2xl p-5 border border-outline-variant/40 flex flex-col gap-3 shadow-sm">
+              <span class="font-label-md text-[10px] text-tertiary-fixed-dim uppercase tracking-wider font-bold">Aktivitas Lanjutan</span>
+              <h4 class="font-headline-md text-sm font-bold text-white">Ingin Eksperimen Bebas?</h4>
+              <p class="font-body-sm text-xs text-on-primary-container/90 leading-relaxed">
+                Uji batasan overflow dan underflow pada kanvas simulasi laboratorium virtual secara real-time.
+              </p>
+              <a href="laboratorium.html" class="mt-1 w-full py-2 bg-secondary text-on-secondary rounded-xl font-headline-md text-xs font-bold text-center hover:bg-secondary/90 transition shadow-xs">
+                Mulai Praktikum Virtual
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- SERTIFIKAT SAYA SECTION -->
+        <section id="sertifikat-section" class="bg-surface-container-lowest rounded-2xl p-6 sm:p-7 shadow-sm border border-outline-variant/30 flex flex-col gap-5 mt-2">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-outline-variant/30">
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-tertiary-fixed-dim text-2xl">workspace_premium</span>
+              <div>
+                <h2 class="font-headline-lg text-lg font-bold text-primary">Sertifikat Digital Kompetensi</h2>
+                <p class="font-body-sm text-xs text-on-surface-variant">Diterbitkan otomatis saat siswa berhasil menuntaskan evaluasi dengan skor tuntas (KKM &ge; 70).</p>
+              </div>
+            </div>
+
+            <button type="button" onclick="window.print()" class="px-4 py-2 bg-secondary text-on-secondary rounded-xl font-headline-md text-xs font-bold hover:bg-secondary/90 shadow-sm transition flex items-center justify-center gap-1.5 cursor-pointer">
+              <span class="material-symbols-outlined text-sm">print</span>
+              <span>Cetak Sertifikat</span>
+            </button>
+          </div>
+
+          <!-- Template Desain Sertifikat Ruang Logika -->
+          <div class="w-full max-w-3xl mx-auto p-8 rounded-2xl border-4 border-double border-secondary/40 bg-gradient-to-b from-white to-surface-container-low shadow-md flex flex-col items-center text-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-secondary flex items-center justify-center text-on-secondary shadow-md">
+              <span class="material-symbols-outlined text-2xl">military_tech</span>
+            </div>
+
+            <span class="font-label-md text-xs tracking-widest uppercase text-secondary font-bold">SERTIFIKAT KOMPETENSI PEMBELAJARAN</span>
+            <h3 class="font-headline-xl text-2xl sm:text-3xl font-extrabold text-primary tracking-tight">RUANG LOGIKA</h3>
+            
+            <p class="font-body-sm text-xs text-on-surface-variant max-w-md">
+              Diberikan secara resmi sebagai pengakuan atas pencapaian dan ketuntasan penguasaan materi:
+            </p>
+
+            <div class="px-6 py-2 rounded-xl bg-secondary-container/40 border border-secondary/30">
+              <span class="font-headline-md text-sm sm:text-base font-bold text-secondary">
+                Struktur Data Linear: Konsep &amp; Implementasi Stack (LIFO) serta Queue (FIFO)
+              </span>
+            </div>
+
+            <p class="font-body-sm text-xs text-on-surface-variant">Kepada:</p>
+            <div class="font-headline-xl text-xl sm:text-2xl font-bold text-primary border-b-2 border-secondary pb-1 px-8 min-w-[240px]">
+              <span id="cert-student-name" class="user-display-name">Farhan Ardiansyah</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-8 w-full max-w-md pt-4 text-xs font-body-sm text-on-surface-variant">
+              <div class="flex flex-col items-center">
+                <span class="font-label-md text-[10px] uppercase text-slate-400">Verifikasi Sistem</span>
+                <span class="font-code-block text-xs font-bold text-emerald-700 mt-1 flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">verified</span> Terverifikasi Cloud
+                </span>
+              </div>
+              <div class="flex flex-col items-center">
+                <span class="font-label-md text-[10px] uppercase text-slate-400">Penanggung Jawab</span>
+                <span class="font-headline-md text-xs font-bold text-primary mt-1">Yusuf Nurul Huda</span>
+                <span class="text-[10px] text-slate-400">Lead Developer Ruang Logika</span>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Google Stitch Footer -->
+  <footer class="w-full bg-surface-container-lowest border-t border-outline-variant/40 py-6 transition-colors">
+    <div class="w-[95vw] mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-on-surface-variant">
+      <div class="flex items-center gap-2">
+        <span class="font-headline-md font-bold text-primary">Ruang Logika</span>
+        <span>&bull;</span>
+        <span>Platform Pembelajaran Struktur Data Linear</span>
+      </div>
+      <div>
+        <strong>Pengembang: Yusuf Nurul Huda</strong>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/db.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
